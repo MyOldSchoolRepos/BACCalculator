@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ import com.google.android.gms.ads.*;
 
 
 public class MainBAC extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
@@ -62,6 +63,13 @@ public class MainBAC extends Activity
 
         // Begin loading interstitial
         interstitial.loadAd(adRequest);
+
+/*        FragmentManager fragmentManager = getFragmentManager(); //Currently not working
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        WelcomeScreenFragment welcomeScreenFragment = new WelcomeScreenFragment();
+        fragmentTransaction.add(R.id.displayFragment, welcomeScreenFragment);
+        fragmentTransaction.commit();*/
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);

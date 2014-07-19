@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="brillianceanimationstudio.brandonward.baccalculator.WelcomeScreenFragment"
+    android:background="#ff696969">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/title_img" />
+
+    <Button
+        android:layout_width="210dp"
+        android:layout_height="120dp"
+        android:text="Calculate My Blood Alcohol Content!"
+        android:id="@+id/quickCalculate"
+        android:layout_gravity="center"
+        android:layout_marginTop="35dp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:background="@drawable/red_button" />
+</FrameLayout>
