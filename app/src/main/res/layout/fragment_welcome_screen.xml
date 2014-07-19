@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="brillianceanimationstudio.brandonward.baccalculator.WelcomeScreenFragment"
-    android:background="#ff696969">
+    android:background="#ff696969"
+    android:id="@+id/mainMenuFrame">
 
     <!-- TODO: Update blank fragment layout -->
 

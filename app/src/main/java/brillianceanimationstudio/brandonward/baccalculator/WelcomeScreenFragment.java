@@ -7,7 +7,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 /**
@@ -19,7 +22,7 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  *
  */
-public class WelcomeScreenFragment extends Fragment {
+public class WelcomeScreenFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,8 +67,21 @@ public class WelcomeScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // TODO: Get main menu button working
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_welcome_screen, container, false);
+        if (container == null){
+            return null;
+        }
+        FrameLayout mFrameLayout = (FrameLayout) inflater.inflate(R.layout.fragment_welcome_screen, container, false);
+        Button mainButton = (Button) mFrameLayout.getChildAt(R.id.quickCalculate);
+        mainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"Main Button Works!", Toast.LENGTH_LONG).show();
+            }
+        });
+        return mFrameLayout;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -76,7 +92,7 @@ public class WelcomeScreenFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity)  {
         super.onAttach(activity);
         try {
             mListener = (OnFragmentInteractionListener) activity;

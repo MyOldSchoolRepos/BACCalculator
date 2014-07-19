@@ -64,13 +64,6 @@ public class MainBAC extends Activity
         // Begin loading interstitial
         interstitial.loadAd(adRequest);
 
-/*        FragmentManager fragmentManager = getFragmentManager(); //Currently not working
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        WelcomeScreenFragment welcomeScreenFragment = new WelcomeScreenFragment();
-        fragmentTransaction.add(R.id.displayFragment, welcomeScreenFragment);
-        fragmentTransaction.commit();*/
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -79,7 +72,6 @@ public class MainBAC extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
     @Override
@@ -166,7 +158,7 @@ public class MainBAC extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_bac_start, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_welcome_screen, container, false);
             return rootView;
         }
 
