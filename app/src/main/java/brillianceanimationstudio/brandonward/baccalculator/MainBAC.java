@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.*;
 
@@ -72,6 +74,7 @@ public class MainBAC extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override
@@ -158,7 +161,19 @@ public class MainBAC extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
+            // Grab buttons, inflate view, then assign actions to the buttons programmatically.
+            Button calcButton;
+            Button userButton;
             View rootView = inflater.inflate(R.layout.fragment_welcome_screen, container, false);
+            calcButton = (Button) rootView.findViewById(R.id.quickCalculate);
+            calcButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: Make Calculate button DO something.
+                    Toast.makeText(getActivity().getApplicationContext(), "Main Button Works!", Toast.LENGTH_LONG).show();
+                }
+            });
+
             return rootView;
         }
 
