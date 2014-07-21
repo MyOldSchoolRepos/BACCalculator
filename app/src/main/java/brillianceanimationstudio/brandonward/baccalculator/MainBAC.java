@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -25,7 +26,7 @@ import com.google.android.gms.ads.*;
 
 
 public class MainBAC extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener{
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
@@ -43,6 +44,9 @@ public class MainBAC extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    private double weight;
+    private int weightType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +79,39 @@ public class MainBAC extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance())
+                .commit();
+
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        // TODO Currently THIS does not work.
+        Fragment newFragment = new WelcomeScreenFragment();
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
+        switch (position) {
+            case 0:
+                newFragment = new WelcomeScreenFragment();
+                break;
+            case 1:
+                newFragment = new StatsFragment();
+                break;
+            case 2:
+                // TODO add the calculation fragment here!
+                break;
+
+        }
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, newFragment)
                 .commit();
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
+
+         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
                 break;
@@ -98,6 +122,9 @@ public class MainBAC extends Activity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
+/*        FragmentTransaction toUpdate = fragmentManager.beginTransaction();
+        toUpdate.replace(R.id.container, newFragment);
+         toUpdate.commit();//This line is breaking*/
     }
 
     public void restoreActionBar() {
@@ -133,6 +160,11 @@ public class MainBAC extends Activity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -161,18 +193,8 @@ public class MainBAC extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            // Grab buttons, inflate view, then assign actions to the buttons programmatically.
-            Button calcButton;
-            Button userButton;
-            View rootView = inflater.inflate(R.layout.fragment_welcome_screen, container, false);
-            calcButton = (Button) rootView.findViewById(R.id.quickCalculate);
-            calcButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO: Make Calculate button DO something.
-                    Toast.makeText(getActivity().getApplicationContext(), "Main Button Works!", Toast.LENGTH_LONG).show();
-                }
-            });
+            View rootView = inflater.inflate(R.layout.fragment_main_bac_start, container, false);
+
 
             return rootView;
         }

@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="left|top"
-        android:id="@+id/">
+        android:id="@+id/RelLayoutForStats">
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,12 +38,29 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
-        <ExpandableListView
+        <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/weightMetric"
-            android:layout_alignTop="@+id/editText"
-            android:layout_toRightOf="@+id/editText"
-            android:layout_toEndOf="@+id/editText" />
+            android:layout_toEndOf="@+id/editText"
+            android:layout_alignTop="@+id/textView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/weightMetric">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pounds"
+                android:id="@+id/poundsButton"
+                android:checked="true" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kilograms"
+                android:id="@+id/kilogramsButton"
+                android:checked="false" />
+        </RadioGroup>
+
     </RelativeLayout>
 </FrameLayout>

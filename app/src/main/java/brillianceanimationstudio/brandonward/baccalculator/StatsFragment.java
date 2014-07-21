@@ -1,13 +1,21 @@
 package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
+import android.app.ExpandableListActivity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.SimpleExpandableListAdapter;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -22,12 +30,12 @@ import android.view.ViewGroup;
 public class StatsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String WEIGHT_PARAM = "weight";
+    private static final String WEIGHT_TYPE_PARAM = "weightType";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private double weight;
+    private int weightType; // I will use a 0 for lbs, and a 1 for kgs.
 
     private OnFragmentInteractionListener mListener;
 
@@ -35,16 +43,16 @@ public class StatsFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param weight parameter to capture weight.
+     * @param weightType parameter to capture lbs or kgs.
      * @return A new instance of fragment StatsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static StatsFragment newInstance(String param1, String param2) {
+    public static StatsFragment newInstance(double weight, int weightType) {
         StatsFragment fragment = new StatsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putDouble(WEIGHT_PARAM, weight);
+        args.putInt(WEIGHT_TYPE_PARAM, weightType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +64,8 @@ public class StatsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            weight = getArguments().getDouble(WEIGHT_PARAM);
+            weightType = getArguments().getInt(WEIGHT_TYPE_PARAM);
         }
     }
 
@@ -68,12 +76,7 @@ public class StatsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_stats, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -106,5 +109,4 @@ public class StatsFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }
