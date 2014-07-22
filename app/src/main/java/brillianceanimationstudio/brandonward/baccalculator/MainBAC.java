@@ -6,10 +6,13 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,21 +23,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import brillianceanimationstudio.brandonward.baccalculator.service.*;
+import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 
 import com.google.android.gms.ads.*;
 
 
 public class MainBAC extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener{
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
     private static final String AD_UNIT_ID = "ca-app-pub-6216655107273980/1892012754";
     // Count until next Full Screen Ad is shown //
-    private int adCount;
+    private int adCount;//persisted as adCount
     private AdRequest adRequest;
-    private Fragment displayFragment;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -44,13 +51,14 @@ public class MainBAC extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
-    private double weight;
-    private int weightType;
+    private userInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userInfoSIOImpl impl = new userInfoSIOImpl();
+        userInfo = impl.getUserInfo();
+        // TODO: Find some way to use shared preferences to persist this serializable userInfo obj.
         setContentView(R.layout.activity_main_bac);
 
         // Show EULA for new users and updates //
@@ -83,12 +91,15 @@ public class MainBAC extends Activity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance())
                 .commit();
-
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        adCount = prefs.getInt("adCount", 0);
+        adCount++;
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("adCount",adCount).commit();
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // TODO Currently THIS does not work.
         Fragment newFragment = new WelcomeScreenFragment();
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
@@ -97,16 +108,23 @@ public class MainBAC extends Activity
                 newFragment = new WelcomeScreenFragment();
                 break;
             case 1:
-                newFragment = new StatsFragment();
+                newFragment = new StatsFragment().newInstance(userInfo);// TODO: Make all of these that need info use newInstance();
                 break;
             case 2:
-                // TODO add the calculation fragment here!
+                newFragment = new BldAlcCntntCalculation();
                 break;
 
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment)
                 .commit();
+        if (adCount % 3 == 2){
+            displayInterstitial();
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            adCount++;
+            editor.putInt("adCount", adCount).apply();
+        }
     }
 
     public void onSectionAttached(int number) {
@@ -158,6 +176,14 @@ public class MainBAC extends Activity
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy(){
+        userInfoSIOImpl impl = new userInfoSIOImpl(); // TODO: Create a way for data in SIO to persist through runs of the app.
+        userInfo = impl.getUserInfo();
+        impl.updateUserInfo(userInfo);
+        super.onDestroy();
     }
 
     @Override
@@ -213,5 +239,4 @@ public class MainBAC extends Activity
             interstitial.show();
         }
     }
-
 }

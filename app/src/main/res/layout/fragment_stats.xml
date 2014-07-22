@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="brillianceanimationstudio.brandonward.baccalculator.StatsFragment">
+    tools:context="brillianceanimationstudio.brandonward.baccalculator.StatsFragment"
+    android:background="#ff000000">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -17,9 +18,12 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Weight:"
-            android:id="@+id/textView"
+            android:id="@+id/weightTitle"
             android:layout_gravity="left|top"
-            android:layout_below="@+id/space" />
+            android:layout_below="@+id/space"
+            android:layout_marginLeft="15dp"
+            android:textSize="30dp"
+            android:textColor="#ffffffff" />
 
         <Space
             android:layout_width="match_parent"
@@ -33,34 +37,101 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText"
-            android:layout_below="@+id/textView"
+            android:id="@+id/weightAmt"
+            android:layout_below="@+id/weightTitle"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textSize="30dp"
+            android:textColor="#ff0011ff"
+            android:background="#ffffffff"
+            android:gravity="center_vertical|center_horizontal" />
 
         <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/editText"
-            android:layout_alignTop="@+id/textView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:id="@+id/weightMetric">
+            android:layout_toEndOf="@+id/weightTitle"
+            android:id="@+id/weightMetric"
+            android:layout_below="@+id/weightAmt"
+            android:orientation="horizontal"
+            android:layout_alignLeft="@+id/genderTitle"
+            android:layout_alignStart="@+id/genderTitle"
+            android:layout_marginLeft="15dp">
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="pounds"
+                android:text="Pounds"
                 android:id="@+id/poundsButton"
-                android:checked="true" />
+                android:checked="false"
+                android:textSize="25dp"
+                android:textColor="#ffffffff" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="kilograms"
+                android:text="Kilograms"
                 android:id="@+id/kilogramsButton"
-                android:checked="false" />
+                android:checked="false"
+                android:textSize="25dp"
+                android:textColor="#ffffffff"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="15dp" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Gender:"
+            android:id="@+id/genderTitle"
+            android:layout_below="@+id/weightMetric"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="30dp"
+            android:textColor="#ffffffff"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/genderTitle"
+            android:orientation="horizontal"
+            android:id="@+id/genderMetric"
+            android:layout_below="@+id/genderTitle"
+            android:layout_alignLeft="@+id/genderTitle"
+            android:layout_alignStart="@+id/genderTitle"
+            android:layout_marginLeft="15dp">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:id="@+id/maleButton"
+                android:checked="false"
+                android:textSize="25dp"
+                android:textColor="#ffffffff" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:id="@+id/femaleButton"
+                android:checked="false"
+                android:textColor="#ffffffff"
+                android:textSize="25dp"
+                android:layout_marginLeft="15dp" />
         </RadioGroup>
 
     </RelativeLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save My Stats"
+        android:id="@+id/SaveStatsButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@drawable/red_button"
+        android:textColor="#ffffffff"
+        android:textSize="30dp" />
 </FrameLayout>

@@ -1,0 +1,104 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="brillianceanimationstudio.brandonward.baccalculator.BldAlcCntntCalculation"
+    android:background="#ff000000">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="left|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Time of First Drink:"
+            android:id="@+id/timeTitle"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="#ffffffff"
+            android:textSize="30dp"
+            android:textIsSelectable="false"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp" />
+
+        <TimePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timePicker"
+            android:layout_below="@+id/timeTitle"
+            android:layout_marginTop="15dp"
+            android:background="#ffffffff"
+            android:foregroundGravity="center_vertical|center_horizontal"
+            android:layout_alignLeft="@+id/timeTitle"
+            android:layout_alignStart="@+id/timeTitle"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Number of Drinks:"
+            android:id="@+id/drinkTitle"
+            android:textColor="#ffffffff"
+            android:textSize="30dp"
+            android:textIsSelectable="false"
+            android:layout_below="@+id/timePicker"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:autoText="false" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editText"
+            android:layout_below="@+id/drinkTitle"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#ffffffff"
+            android:textSize="30dp"
+            android:layout_marginTop="15dp"
+            android:textColor="#ff0011ff" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="My Blood Alcohol Content:"
+            android:id="@+id/bloodAlcCntTitle"
+            android:layout_below="@+id/editText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="#ffffffff"
+            android:layout_marginTop="15dp"
+            android:textSize="30dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/userBACValue"
+            android:layout_below="@+id/bloodAlcCntTitle"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="#ffffffff"
+            android:textSize="50dp"
+            android:textColor="#ffde0c1b"
+            android:textStyle="bold"
+            android:gravity="center_vertical|center_horizontal" />
+
+    </RelativeLayout>
+</FrameLayout>
