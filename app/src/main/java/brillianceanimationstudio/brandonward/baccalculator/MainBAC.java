@@ -66,9 +66,14 @@ public class MainBAC extends Activity
         userInfo obj = gson.fromJson(json, userInfo.class);
         userInfo = obj;
         userInfoSIOImpl impl = new userInfoSIOImpl();
-        userInfo = impl.updateUserInfo(userInfo);
+        if (userInfo == null) {
+            userInfo = impl.getUserInfo();
+        }
+        else{
+            userInfo = impl.updateUserInfo(userInfo);
+        }
 
-        // TODO: Find some way to use shared preferences to persist this serializable userInfo obj.
+        // TODO: Find some way to use shared preferences to persist this serializable userInfo obj. No luck yet.
         setContentView(R.layout.activity_main_bac);
 
         // Create the interstitial //
