@@ -68,8 +68,10 @@ public class StatsFragment extends Fragment {
     public static StatsFragment newInstance(userInfo userInfo) {
         StatsFragment fragment = new StatsFragment();
         Bundle args = new Bundle();
-        args.putSerializable(USER_PARAM, userInfo);
-        fragment.setArguments(args);
+        if (!(userInfo == null)) {
+            args.putSerializable(USER_PARAM, userInfo);
+            fragment.setArguments(args);
+        }
         return fragment;
     }
     public StatsFragment() {
@@ -82,6 +84,9 @@ public class StatsFragment extends Fragment {
         if (getArguments() != null) {
             mUserInfo = (userInfo) getArguments().getSerializable(
                     USER_PARAM);
+        }
+        else{
+            mUserInfo = new userInfo();
         }
     }
 
@@ -100,20 +105,18 @@ public class StatsFragment extends Fragment {
         maleBtn = (RadioButton) view.findViewById(R.id.maleButton);
         femaleBtn = (RadioButton) view.findViewById(R.id.femaleButton);
         genderSelect = (RadioGroup) view.findViewById(R.id.genderMetric);
-
-        weightAmt.setText(Double.toString(mUserInfo.getWeight()));
-        if (mUserInfo.isWeightType()){
-            kiloBtn.setChecked(true);
-        }
-        else {
-            poundsBtn.setChecked(true);
-        }
-        if (mUserInfo.isGenderType()){
-            maleBtn.setChecked(true);
-        }
-        else{
-            femaleBtn.setChecked(true);
-        }
+        //Set all base attributes of fragment
+            weightAmt.setText(Double.toString(mUserInfo.getWeight()));
+            if (mUserInfo.isWeightType()) {
+                kiloBtn.setChecked(true);
+            } else {
+                poundsBtn.setChecked(true);
+            }
+            if (mUserInfo.isGenderType()) {
+                maleBtn.setChecked(true);
+            } else {
+                femaleBtn.setChecked(true);
+            }
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

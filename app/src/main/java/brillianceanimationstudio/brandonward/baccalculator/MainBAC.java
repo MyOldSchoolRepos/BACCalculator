@@ -30,6 +30,7 @@ import brillianceanimationstudio.brandonward.baccalculator.service.*;
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 
 import com.google.android.gms.ads.*;
+import com.google.gson.Gson;
 
 
 public class MainBAC extends Activity
@@ -56,13 +57,19 @@ public class MainBAC extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userInfoSIOImpl impl = new userInfoSIOImpl();
-        userInfo = impl.getUserInfo();
-        // TODO: Find some way to use shared preferences to persist this serializable userInfo obj.
-        setContentView(R.layout.activity_main_bac);
-
         // Show EULA for new users and updates //
         new SimpleEula(this).show();
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        Gson gson = new Gson();
+        String json = prefs.getString("userInfo","");
+        userInfo obj = gson.fromJson(json, userInfo.class);
+        userInfo = obj;
+        userInfoSIOImpl impl = new userInfoSIOImpl();
+        userInfo = impl.updateUserInfo(userInfo);
+
+        // TODO: Find some way to use shared preferences to persist this serializable userInfo obj.
+        setContentView(R.layout.activity_main_bac);
 
         // Create the interstitial //
         interstitial = new InterstitialAd(this);
@@ -91,7 +98,7 @@ public class MainBAC extends Activity
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance())
                 .commit();
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+
         adCount = prefs.getInt("adCount", 0);
         adCount++;
         SharedPreferences.Editor editor = prefs.edit();
@@ -182,7 +189,12 @@ public class MainBAC extends Activity
     public void onDestroy(){
         userInfoSIOImpl impl = new userInfoSIOImpl(); // TODO: Create a way for data in SIO to persist through runs of the app.
         userInfo = impl.getUserInfo();
-        impl.updateUserInfo(userInfo);
+        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(userInfo);
+        prefsEditor.putString("userInfo", json);
+        prefsEditor.commit();
         super.onDestroy();
     }
 
