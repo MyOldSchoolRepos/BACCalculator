@@ -1,13 +1,11 @@
 package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
-import android.app.ExpandableListActivity;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
-import android.test.UiThreadTest;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +13,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 import brillianceanimationstudio.brandonward.baccalculator.service.*;
