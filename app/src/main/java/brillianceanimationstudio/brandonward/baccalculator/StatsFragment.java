@@ -80,7 +80,7 @@ public class StatsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        USER_STATE=mUserInfo.getPrefsKey();
+        USER_STATE= getUserInfo().getPrefsKey();
         mUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
     }
 
@@ -100,13 +100,13 @@ public class StatsFragment extends Fragment {
         femaleBtn = (RadioButton) view.findViewById(R.id.femaleButton);
         genderSelect = (RadioGroup) view.findViewById(R.id.genderMetric);
         //Set all base attributes of fragment
-            weightAmt.setText(Double.toString(mUserInfo.getWeight()));
-            if (mUserInfo.isWeightType()) {
+            weightAmt.setText(Double.toString(getUserInfo().getWeight()));
+            if (getUserInfo().isWeightType()) {
                 kiloBtn.setChecked(true);
             } else {
                 poundsBtn.setChecked(true);
             }
-            if (mUserInfo.isGenderType()) {
+            if (getUserInfo().isGenderType()) {
                 femaleBtn.setChecked(true);
             } else {
                 maleBtn.setChecked(true);
@@ -125,25 +125,25 @@ public class StatsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: Make Save Button DO something.
-                mUserInfo.setWeight(Double.parseDouble(weightAmt.getText().toString()));
+                getUserInfo().setWeight(Double.parseDouble(weightAmt.getText().toString()));
                 if (kiloBtn.isChecked()){
-                    mUserInfo.setWeightType(true);
+                    getUserInfo().setWeightType(true);
                 }
                 else{
-                    mUserInfo.setWeightType(false);
+                    getUserInfo().setWeightType(false);
                 }
                 if (maleBtn.isChecked()){
-                    mUserInfo.setGenderType(false);
+                    getUserInfo().setGenderType(false);
                 }
                 else{
-                    mUserInfo.setGenderType(true);
+                    getUserInfo().setGenderType(true);
                 }
                 final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-                String user_state = mUserInfo.toPrefsString(mUserInfo);
+                String user_state = getUserInfo().toPrefsString(getUserInfo());
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(USER_STATE, user_state).apply();
                 userInfoSIOImpl impl = new userInfoSIOImpl();
-                impl.updateUserInfo(mUserInfo);
+                impl.updateUserInfo(getUserInfo());
                 Toast.makeText(getActivity().getApplicationContext(), "Stats Saved!", Toast.LENGTH_LONG).show();
             }
         });
@@ -167,6 +167,10 @@ public class StatsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public userInfo getUserInfo() {
+        return mUserInfo;
     }
 
     /**

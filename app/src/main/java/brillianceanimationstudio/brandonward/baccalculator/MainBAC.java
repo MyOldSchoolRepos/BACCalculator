@@ -30,6 +30,7 @@ public class MainBAC extends Activity
     /* Your ad unit id. Replace with your actual ad unit id. */
     private static final String AD_UNIT_ID = "ca-app-pub-6216655107273980/1892012754";
     private String USER_STATE;
+    private String VISIBLE_FRAGMENT_TAG;
     // Count until next Full Screen Ad is shown //
     private int adCount;//persisted as adCount
     private AdRequest adRequest;
@@ -87,8 +88,11 @@ public class MainBAC extends Activity
 
         adCount = prefs.getInt("adCount", 0);
         adCount++;
+        if (adCount > 100){
+            adCount = 0;
+        }
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("adCount",adCount).commit();
+        editor.putInt("adCount",adCount).apply();
     }
 
     @Override
@@ -98,6 +102,8 @@ public class MainBAC extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        // TODO: get this working then uncomment this
+        // getVisibleFragment(VISIBLE_FRAGMENT_TAG);//Ensures that userInfo is completely up to date.
         Fragment newFragment = new WelcomeScreenFragment();
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
@@ -113,8 +119,10 @@ public class MainBAC extends Activity
                 break;
 
         }
+        VISIBLE_FRAGMENT_TAG = newFragment.toString();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, newFragment,newFragment.toString())
+                .replace(R.id.container, newFragment,VISIBLE_FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
         if (adCount % 3 == 2){
             displayInterstitial();
@@ -241,4 +249,21 @@ public class MainBAC extends Activity
             interstitial.show();
         }
     }
+
+/*    public void getVisibleFragment(String tag){
+        if (tag.equals("WelcomeScreenFragment")){
+          this.userInfo = userInfo;//Has no data, so we keep userInfo the same.
+        }
+        else if (tag.equals("StatsFragment")){
+            StatsFragment statsFragment = (StatsFragment)getFragmentManager().findFragmentByTag(tag);
+           this.userInfo = statsFragment.getUserInfo();
+        }
+        else if (tag.equals("BldAlcCntntCalculation")){
+            BldAlcCntntCalculation bldAlcCntntCalculation = (BldAlcCntntCalculation) getFragmentManager().findFragmentByTag(tag);
+            // TODO: uncomment this when this fragment contains userInfo
+            // this.userInfo = bldAlcCntntCalculation.getUserInfo();
+        }
+
+
+    }*/
 }

@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import brillianceanimationstudio.brandonward.baccalculator.domain.*;
+
 
 
 /**
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
  *
  */
 public class BldAlcCntntCalculation extends Fragment {
+    private userInfo userInfo;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -94,6 +97,10 @@ public class BldAlcCntntCalculation extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public userInfo getUserInfo() {
+        return userInfo;
     }
 
     /**
