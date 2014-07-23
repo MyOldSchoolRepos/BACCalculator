@@ -7,9 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
+import android.test.UiThreadTest;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
@@ -17,6 +20,7 @@ import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleExpandableListAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -40,6 +44,7 @@ public class StatsFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String USER_PARAM = "user";
+    private String USER_STATE;
 
     private Button mButton;
     private EditText weightAmt;
@@ -81,6 +86,7 @@ public class StatsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        USER_STATE=mUserInfo.getPrefsKey();
         mUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
     }
 
@@ -107,10 +113,22 @@ public class StatsFragment extends Fragment {
                 poundsBtn.setChecked(true);
             }
             if (mUserInfo.isGenderType()) {
-                maleBtn.setChecked(true);
-            } else {
                 femaleBtn.setChecked(true);
+            } else {
+                maleBtn.setChecked(true);
             }
+        weightAmt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView weightAmt, int actionId,
+                                          KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    mButton.performClick();
+
+                    return true;
+                }
+                return false;
+            }
+        });
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,11 +141,15 @@ public class StatsFragment extends Fragment {
                     mUserInfo.setWeightType(false);
                 }
                 if (maleBtn.isChecked()){
-                    mUserInfo.setGenderType(true);
-                }
-                else{
                     mUserInfo.setGenderType(false);
                 }
+                else{
+                    mUserInfo.setGenderType(true);
+                }
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                String user_state = mUserInfo.toPrefsString(mUserInfo);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(USER_STATE, user_state).apply();
                 userInfoSIOImpl impl = new userInfoSIOImpl();
                 impl.updateUserInfo(mUserInfo);
                 Toast.makeText(getActivity().getApplicationContext(), "Stats Saved!", Toast.LENGTH_LONG).show();

@@ -10,9 +10,11 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +32,7 @@ import brillianceanimationstudio.brandonward.baccalculator.service.*;
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 
 import com.google.android.gms.ads.*;
-import com.google.gson.Gson;
+
 
 
 public class MainBAC extends Activity
@@ -39,6 +41,7 @@ public class MainBAC extends Activity
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
     private static final String AD_UNIT_ID = "ca-app-pub-6216655107273980/1892012754";
+    private String USER_STATE;
     // Count until next Full Screen Ad is shown //
     private int adCount;//persisted as adCount
     private AdRequest adRequest;
@@ -52,28 +55,17 @@ public class MainBAC extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private userInfo userInfo;
+    private userInfo userInfo = new userInfo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Show EULA for new users and updates //
         new SimpleEula(this).show();
-
+        USER_STATE = userInfo.getPrefsKey();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        Gson gson = new Gson();
-        String json = prefs.getString("userInfo","");
-        userInfo obj = gson.fromJson(json, userInfo.class);
-        userInfo = obj;
-        userInfoSIOImpl impl = new userInfoSIOImpl();
-        if (userInfo == null) {
-            userInfo = impl.getUserInfo();
-        }
-        else{
-            userInfo = impl.updateUserInfo(userInfo);
-        }
-
-        // TODO: Find some way to use shared preferences to persist this serializable userInfo obj. No luck yet.
+        String user_state = prefs.getString(USER_STATE,"");
+        userInfo = userInfo.readPrefsString(user_state);
         setContentView(R.layout.activity_main_bac);
 
         // Create the interstitial //
@@ -104,10 +96,16 @@ public class MainBAC extends Activity
         fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance())
                 .commit();
 
+
         adCount = prefs.getInt("adCount", 0);
         adCount++;
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("adCount",adCount).commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -152,9 +150,6 @@ public class MainBAC extends Activity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
-/*        FragmentTransaction toUpdate = fragmentManager.beginTransaction();
-        toUpdate.replace(R.id.container, newFragment);
-         toUpdate.commit();//This line is breaking*/
     }
 
     public void restoreActionBar() {
@@ -191,15 +186,17 @@ public class MainBAC extends Activity
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     public void onDestroy(){
-        userInfoSIOImpl impl = new userInfoSIOImpl(); // TODO: Create a way for data in SIO to persist through runs of the app.
-        userInfo = impl.getUserInfo();
-        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(userInfo);
-        prefsEditor.putString("userInfo", json);
-        prefsEditor.commit();
         super.onDestroy();
     }
 

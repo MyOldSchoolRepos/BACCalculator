@@ -23,6 +23,11 @@ public class userInfo implements Serializable{
     private int tHour;
     private int tMinute;
     private double drinks;
+    private static final String USER_STATE = "this.user.information";
+
+    public static String getPrefsKey() {
+        return USER_STATE;
+    }
 
     public double getWeight() {
         return weight;
@@ -71,4 +76,23 @@ public class userInfo implements Serializable{
     public void setDrinks(double drinks) {
         this.drinks = drinks;
     }
+
+    public String toPrefsString(userInfo userInfo){
+
+        return weight+"/"+weightType+"/"+genderType+"/"+tHour+"/"+tMinute+"/"+drinks;
+    }
+
+    public userInfo readPrefsString(String prefsString){
+        if(!(prefsString.equals("") || prefsString == null)) {
+            String[] parts = prefsString.split("/");
+            weight = Double.parseDouble(parts[0]);
+            weightType = Boolean.parseBoolean(parts[1]);
+            genderType = Boolean.parseBoolean(parts[2]);
+            tHour = Integer.parseInt(parts[3]);
+            tMinute = Integer.parseInt(parts[4]);
+            drinks = Double.parseDouble(parts[5]);
+        }
+        return this;
+    }
 }
+
