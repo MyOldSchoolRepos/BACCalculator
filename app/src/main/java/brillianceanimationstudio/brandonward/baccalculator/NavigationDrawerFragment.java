@@ -248,7 +248,8 @@ public class NavigationDrawerFragment extends Fragment{
         }
 
         if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Calculate Now", Toast.LENGTH_SHORT).show();
+            // TODO: Make this "Calculate Now" and call validates and update BAC stuff, etc...
             return true;
         }
 
