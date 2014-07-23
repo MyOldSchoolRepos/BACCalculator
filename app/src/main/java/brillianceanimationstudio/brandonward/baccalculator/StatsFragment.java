@@ -72,6 +72,10 @@ public class StatsFragment extends Fragment {
     public StatsFragment() {
         // Required empty public constructor
     }
+    @Override
+    public String toString(){
+        return "StatsFragment";
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,12 +112,10 @@ public class StatsFragment extends Fragment {
                 maleBtn.setChecked(true);
             }
         weightAmt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView weightAmt, int actionId,
-                                          KeyEvent event) {
+            @Override//Makes the 'Done' button also save stats.
+            public boolean onEditorAction(TextView weightAmt, int actionId,KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     mButton.performClick();
-
                     return true;
                 }
                 return false;

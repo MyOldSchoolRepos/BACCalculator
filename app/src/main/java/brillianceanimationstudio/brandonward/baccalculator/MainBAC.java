@@ -114,7 +114,7 @@ public class MainBAC extends Activity
 
         }
         fragmentManager.beginTransaction()
-                .replace(R.id.container, newFragment)
+                .replace(R.id.container, newFragment,newFragment.toString())
                 .commit();
         if (adCount % 3 == 2){
             displayInterstitial();

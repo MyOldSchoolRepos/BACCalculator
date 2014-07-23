@@ -51,6 +51,10 @@ public class BldAlcCntntCalculation extends Fragment {
     public BldAlcCntntCalculation() {
         // Required empty public constructor
     }
+    @Override
+    public String toString(){
+        return "BldAlcCntntCalculationFragment";
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

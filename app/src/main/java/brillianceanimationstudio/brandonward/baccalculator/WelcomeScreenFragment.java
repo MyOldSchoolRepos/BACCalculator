@@ -57,6 +57,11 @@ public class WelcomeScreenFragment extends Fragment{
     }
 
     @Override
+    public String toString(){
+        return "WelcomeScreenFragment";
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
