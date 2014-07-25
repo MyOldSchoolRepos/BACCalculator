@@ -73,7 +73,7 @@ public class BldAlcCntntCalculation extends Fragment {
         final EditText drinkCount = (EditText) view.findViewById(R.id.drinkCount);
         Button plusDrink = (Button) view.findViewById(R.id.plusOneDrink);
         Button minusDrink = (Button) view.findViewById(R.id.minusOneDrink);
-        drinkCount.setText(Double.toString(getUserInfo().getDrinks()));//TODO Claims this is breaking, but this is not the real issue...
+        drinkCount.setText(Double.toString(getUserInfo().getDrinks()));
         plusDrink.setOnClickListener(new View.OnClickListener() {
 
             @Override
