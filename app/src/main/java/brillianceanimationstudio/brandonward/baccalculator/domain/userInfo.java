@@ -23,6 +23,9 @@ public class userInfo implements Serializable{
     private int tHour;
     private int tMinute;
     private double drinks;
+    private int lastDay;
+    private int lastMonth;
+    private int lastYear;
     private static final String USER_STATE = "this.user.information";
 
     public static String getPrefsKey() {
@@ -94,5 +97,30 @@ public class userInfo implements Serializable{
         }
         return this;
     }
+
+    public int getLastDay() {
+        return lastDay;
+    }
+
+    public void setLastDay(int lastDay) {
+        this.lastDay = lastDay;
+    }
+
+    public int getLastMonth() {
+        return lastMonth;
+    }
+
+    public void setLastMonth(int lastMonth) {
+        this.lastMonth = lastMonth;
+    }
+
+    public int getLastYear() {
+        return lastYear;
+    }
+
+    public void setLastYear(int lastYear) {
+        this.lastYear = lastYear;
+    }
+
 }
 

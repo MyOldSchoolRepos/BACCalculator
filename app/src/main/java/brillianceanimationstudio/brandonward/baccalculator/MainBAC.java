@@ -51,10 +51,10 @@ public class MainBAC extends Activity
         super.onCreate(savedInstanceState);
         // Show EULA for new users and updates //
         new SimpleEula(this).show();
-        USER_STATE = userInfo.getPrefsKey();
+        USER_STATE = getUserInfo().getPrefsKey();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         String user_state = prefs.getString(USER_STATE,"");
-        userInfo = userInfo.readPrefsString(user_state);
+        userInfo = getUserInfo().readPrefsString(user_state);
         setContentView(R.layout.activity_main_bac);
 
         // Create the interstitial //
@@ -82,7 +82,7 @@ public class MainBAC extends Activity
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance())
+        fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance(getUserInfo()))
                 .commit();
 
 
@@ -112,7 +112,7 @@ public class MainBAC extends Activity
                 newFragment = new WelcomeScreenFragment();
                 break;
             case 1:
-                newFragment = new StatsFragment().newInstance(userInfo);// TODO: Make all of these that need info use newInstance();
+                newFragment = new StatsFragment().newInstance(getUserInfo());// TODO: Make all of these that need info use newInstance();
                 break;
             case 2:
                 newFragment = new BldAlcCntntCalculation();
@@ -199,6 +199,10 @@ public class MainBAC extends Activity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public userInfo getUserInfo() {
+        return userInfo;
     }
 
     /**

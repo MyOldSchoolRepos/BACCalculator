@@ -1,10 +1,14 @@
 package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import brillianceanimationstudio.brandonward.baccalculator.domain.userInfo;
 
 
 /**
@@ -28,27 +34,29 @@ import android.widget.Toast;
 public class WelcomeScreenFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String USER_PARAM = "user";
+    private String USER_STATE;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String userInfoParam;
 
     private OnFragmentInteractionListener mListener;
 
     private Button mButton;
+    private userInfo wUserInfo;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
+     * @param userInfo receives the latest and greatest instance of userInfo.
      * @return A new instance of fragment WelcomeScreen.
      */
-    // TODO: Rename and change types and number of parameters
-    public static WelcomeScreenFragment newInstance() {// am not removing the static from this.
+    public static WelcomeScreenFragment newInstance(userInfo userInfo) {
         WelcomeScreenFragment fragment = new WelcomeScreenFragment();
         Bundle args = new Bundle();
+        if (!(userInfo==null)){
+            args.putSerializable(USER_PARAM, userInfo);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,6 +72,10 @@ public class WelcomeScreenFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        USER_STATE= getUserInfo().getPrefsKey();
+        if (getArguments()!= null) {
+            wUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
+        }
 
     }
 
@@ -77,8 +89,24 @@ public class WelcomeScreenFragment extends Fragment{
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Make Calculate Button DO something. SAME as MainBAC
-                Toast.makeText(getActivity().getApplicationContext(),"Main Button Works!", Toast.LENGTH_LONG).show();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                if (wUserInfo != null) {
+                    if (wUserInfo.getWeight() != 0) {
+                        fragmentTransaction.replace(R.id.container, BldAlcCntntCalculation.newInstance(wUserInfo))
+                                .commit();
+                    } else {
+                        fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(wUserInfo))
+                                .commit();
+                    }
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "ERROR: Unable to find user stats.", Toast.LENGTH_SHORT).show();
+
+                    fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(wUserInfo))
+                            .commit();
+                }
+//                Toast.makeText(getActivity().getApplicationContext(),"Main Button Works!", Toast.LENGTH_LONG).show();
             }
         });
         return view;
@@ -123,5 +151,9 @@ public class WelcomeScreenFragment extends Fragment{
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+    public userInfo getUserInfo() {
+        return wUserInfo;
+    }
 
-}
+
+    }

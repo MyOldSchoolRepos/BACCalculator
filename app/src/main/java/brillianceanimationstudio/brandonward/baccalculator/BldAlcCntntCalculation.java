@@ -22,32 +22,28 @@ import brillianceanimationstudio.brandonward.baccalculator.domain.*;
  *
  */
 public class BldAlcCntntCalculation extends Fragment {
-    private userInfo userInfo;
+    private static final String USER_PARAM = "user";
+    private String USER_STATE;
+
+    private userInfo bUserInfo;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param userInfo receives the current userInfo.
      * @return A new instance of fragment BldAlcCntntCalculation.
      */
     // TODO: Rename and change types and number of parameters
-    public static BldAlcCntntCalculation newInstance(String param1, String param2) {
+    public static BldAlcCntntCalculation newInstance(userInfo userInfo) {
         BldAlcCntntCalculation fragment = new BldAlcCntntCalculation();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        if (userInfo != null){
+            args.putSerializable(USER_PARAM, userInfo);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,9 +58,9 @@ public class BldAlcCntntCalculation extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        USER_STATE= getUserInfo().getPrefsKey();
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            bUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
         }
     }
 
@@ -100,7 +96,7 @@ public class BldAlcCntntCalculation extends Fragment {
     }
 
     public userInfo getUserInfo() {
-        return userInfo;
+        return bUserInfo;
     }
 
     /**

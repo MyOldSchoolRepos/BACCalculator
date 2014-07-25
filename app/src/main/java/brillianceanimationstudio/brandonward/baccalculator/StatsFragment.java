@@ -65,8 +65,8 @@ public class StatsFragment extends Fragment {
         Bundle args = new Bundle();
         if (!(userInfo == null)) {
             args.putSerializable(USER_PARAM, userInfo);
-            fragment.setArguments(args);
         }
+        fragment.setArguments(args);
         return fragment;
     }
     public StatsFragment() {
@@ -81,7 +81,9 @@ public class StatsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         USER_STATE= getUserInfo().getPrefsKey();
-        mUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
+        if (getArguments()!= null) {
+            mUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
+        }
     }
 
     @Override
@@ -103,13 +105,21 @@ public class StatsFragment extends Fragment {
             weightAmt.setText(Double.toString(getUserInfo().getWeight()));
             if (getUserInfo().isWeightType()) {
                 kiloBtn.setChecked(true);
-            } else {
+            } else if (!(getUserInfo().isWeightType())) {
                 poundsBtn.setChecked(true);
+            }
+            else{
+                kiloBtn.setChecked(false);
+                poundsBtn.setChecked(false);
             }
             if (getUserInfo().isGenderType()) {
                 femaleBtn.setChecked(true);
-            } else {
+            } else if (!(getUserInfo().isGenderType())) {
                 maleBtn.setChecked(true);
+            }
+            else{
+                femaleBtn.setChecked(false);
+                maleBtn.setChecked(false);
             }
         weightAmt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override//Makes the 'Done' button also save stats.
