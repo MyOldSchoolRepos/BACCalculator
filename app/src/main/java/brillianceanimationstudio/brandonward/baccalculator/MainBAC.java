@@ -16,19 +16,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Toast;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
+import brillianceanimationstudio.brandonward.baccalculator.service.userInfoSIOImpl;
 
 import com.google.android.gms.ads.*;
 
 
-
 public class MainBAC extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener {
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
-    private static final String AD_UNIT_ID = "ca-app-pub-6216655107273980/1892012754";
+    private static final String AD_UNIT_ID = "ca-app-pub-1321769086734378/4674749647";
     private String USER_STATE;
     private String VISIBLE_FRAGMENT_TAG;
     // Count until next Full Screen Ad is shown //
@@ -53,7 +54,7 @@ public class MainBAC extends Activity
         new SimpleEula(this).show();
         USER_STATE = getUserInfo().getPrefsKey();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        String user_state = prefs.getString(USER_STATE,"");
+        String user_state = prefs.getString(USER_STATE, "");
         userInfo = getUserInfo().readPrefsString(user_state);
         setContentView(R.layout.activity_main_bac);
 
@@ -88,11 +89,11 @@ public class MainBAC extends Activity
 
         adCount = prefs.getInt("adCount", 0);
         adCount++;
-        if (adCount > 100){
+        if (adCount > 100) {
             adCount = 0;
         }
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("adCount",adCount).apply();
+        editor.putInt("adCount", adCount).apply();
     }
 
     @Override
@@ -102,29 +103,27 @@ public class MainBAC extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // TODO: get this working then uncomment this
-        // getVisibleFragment(VISIBLE_FRAGMENT_TAG);//Ensures that userInfo is completely up to date.
         Fragment newFragment = new WelcomeScreenFragment();
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         switch (position) {
             case 0:
-                newFragment = new WelcomeScreenFragment();
+                newFragment = new WelcomeScreenFragment().newInstance(userInfo);
                 break;
             case 1:
-                newFragment = new StatsFragment().newInstance(getUserInfo());// TODO: Make all of these that need info use newInstance();
+                newFragment = new StatsFragment().newInstance(userInfo);// TODO: Make all of these that need info use newInstance();
                 break;
             case 2:
-                newFragment = new BldAlcCntntCalculation();
+                newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
                 break;
 
         }
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, newFragment,VISIBLE_FRAGMENT_TAG)
+                .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
-        if (adCount % 3 == 2){
+        if (adCount % 3 == 2) {
             displayInterstitial();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
             SharedPreferences.Editor editor = prefs.edit();
@@ -135,7 +134,7 @@ public class MainBAC extends Activity
 
     public void onSectionAttached(int number) {
 
-         switch (number) {
+        switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
                 break;
@@ -192,7 +191,7 @@ public class MainBAC extends Activity
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 
@@ -201,8 +200,77 @@ public class MainBAC extends Activity
 
     }
 
+    @Override
+    public void plusOneDrinkPressed(userInfo userInfo) {
+        if (userInfo != null){
+            this.userInfo = userInfo;
+        }
+        else {
+            userInfo = this.userInfo;
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
+        VISIBLE_FRAGMENT_TAG = newFragment.toString();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+        if (adCount % 3 == 2) {
+            displayInterstitial();
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            adCount++;
+            editor.putInt("adCount", adCount).apply();
+        }
+    }
+
     public userInfo getUserInfo() {
         return userInfo;
+    }
+
+    @Override
+    public void saveStats(userInfo userInfo) {
+        this.userInfo = userInfo;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String user_state = getUserInfo().toPrefsString(getUserInfo());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(USER_STATE, user_state).apply();
+        userInfoSIOImpl impl = new userInfoSIOImpl();
+        impl.updateUserInfo(getUserInfo());
+        Toast.makeText(getApplicationContext(), "Stats Saved!", Toast.LENGTH_LONG).show();
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
+        VISIBLE_FRAGMENT_TAG = newFragment.toString();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+        if (adCount % 3 == 2) {
+            displayInterstitial();
+            editor = prefs.edit();
+            adCount++;
+            editor.putInt("adCount", adCount).apply();
+        }
+    }
+
+    @Override
+    public void CalculateBAC(userInfo userInfo) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (userInfo != null) {
+        this.userInfo = userInfo;
+        }
+        else {
+            userInfo = this.userInfo;
+        }
+            if (userInfo.getWeight() != 0) {
+                fragmentTransaction.replace(R.id.container, BldAlcCntntCalculation.newInstance(userInfo))
+                        .commit();
+            } else {
+                fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(userInfo))
+                        .commit();
+            }
+
     }
 
     /**
@@ -232,7 +300,7 @@ public class MainBAC extends Activity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_bac_start, container, false);
 
 
@@ -249,25 +317,8 @@ public class MainBAC extends Activity
 
 
     public void displayInterstitial() {
-        if (interstitial.isLoaded()){
+        if (interstitial.isLoaded()) {
             interstitial.show();
         }
     }
-
-/*    public void getVisibleFragment(String tag){
-        if (tag.equals("WelcomeScreenFragment")){
-          this.userInfo = userInfo;//Has no data, so we keep userInfo the same.
-        }
-        else if (tag.equals("StatsFragment")){
-            StatsFragment statsFragment = (StatsFragment)getFragmentManager().findFragmentByTag(tag);
-           this.userInfo = statsFragment.getUserInfo();
-        }
-        else if (tag.equals("BldAlcCntntCalculation")){
-            BldAlcCntntCalculation bldAlcCntntCalculation = (BldAlcCntntCalculation) getFragmentManager().findFragmentByTag(tag);
-            // TODO: uncomment this when this fragment contains userInfo
-            // this.userInfo = bldAlcCntntCalculation.getUserInfo();
-        }
-
-
-    }*/
 }

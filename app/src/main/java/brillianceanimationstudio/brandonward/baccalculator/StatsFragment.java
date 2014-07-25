@@ -28,7 +28,6 @@ import brillianceanimationstudio.brandonward.baccalculator.service.*;
  * to handle interaction events.
  * Use the {@link StatsFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class StatsFragment extends Fragment {
 
@@ -69,19 +68,21 @@ public class StatsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public StatsFragment() {
         // Required empty public constructor
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return "StatsFragment";
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        USER_STATE= getUserInfo().getPrefsKey();
-        if (getArguments()!= null) {
+        USER_STATE = getUserInfo().getPrefsKey();
+        if (getArguments() != null) {
             mUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
         }
     }
@@ -102,28 +103,20 @@ public class StatsFragment extends Fragment {
         femaleBtn = (RadioButton) view.findViewById(R.id.femaleButton);
         genderSelect = (RadioGroup) view.findViewById(R.id.genderMetric);
         //Set all base attributes of fragment
-            weightAmt.setText(Double.toString(getUserInfo().getWeight()));
-            if (getUserInfo().isWeightType()) {
-                kiloBtn.setChecked(true);
-            } else if (!(getUserInfo().isWeightType())) {
-                poundsBtn.setChecked(true);
-            }
-            else{
-                kiloBtn.setChecked(false);
-                poundsBtn.setChecked(false);
-            }
-            if (getUserInfo().isGenderType()) {
-                femaleBtn.setChecked(true);
-            } else if (!(getUserInfo().isGenderType())) {
-                maleBtn.setChecked(true);
-            }
-            else{
-                femaleBtn.setChecked(false);
-                maleBtn.setChecked(false);
-            }
+        weightAmt.setText(Double.toString(getUserInfo().getWeight()));
+        if (getUserInfo().isWeightType()) {
+            kiloBtn.setChecked(true);
+        } else {
+            poundsBtn.setChecked(true);
+        }
+        if (getUserInfo().isGenderType()) {
+            femaleBtn.setChecked(true);
+        } else {
+            maleBtn.setChecked(true);
+        }
         weightAmt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override//Makes the 'Done' button also save stats.
-            public boolean onEditorAction(TextView weightAmt, int actionId,KeyEvent event) {
+            public boolean onEditorAction(TextView weightAmt, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     mButton.performClick();
                     return true;
@@ -134,32 +127,28 @@ public class StatsFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Make Save Button DO something.
                 getUserInfo().setWeight(Double.parseDouble(weightAmt.getText().toString()));
-                if (kiloBtn.isChecked()){
+                if (kiloBtn.isChecked()) {
                     getUserInfo().setWeightType(true);
-                }
-                else{
+                } else {
                     getUserInfo().setWeightType(false);
                 }
-                if (maleBtn.isChecked()){
+                if (maleBtn.isChecked()) {
                     getUserInfo().setGenderType(false);
-                }
-                else{
+                } else {
                     getUserInfo().setGenderType(true);
                 }
-                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-                String user_state = getUserInfo().toPrefsString(getUserInfo());
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(USER_STATE, user_state).apply();
-                userInfoSIOImpl impl = new userInfoSIOImpl();
-                impl.updateUserInfo(getUserInfo());
-                Toast.makeText(getActivity().getApplicationContext(), "Stats Saved!", Toast.LENGTH_LONG).show();
+                onSavePressed(mUserInfo);
             }
         });
         return view;
     }
 
+    public void onSavePressed(userInfo userInfo) {
+        if (mListener != null) {
+            mListener.saveStats(userInfo);
+        }
+    }
 
 
     @Override
@@ -188,13 +177,12 @@ public class StatsFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void saveStats(userInfo userInfo);
     }
 }

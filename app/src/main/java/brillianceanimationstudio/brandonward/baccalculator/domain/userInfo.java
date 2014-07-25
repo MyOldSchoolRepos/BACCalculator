@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  * Created by BrandonWard on 7/21/2014.
- *
+ * <p/>
  * Serializable class that will be stored, written, read, and passed between fragments to pull relevent info
  */
 
@@ -16,7 +16,7 @@ import java.io.Serializable;
                     tMinute = minute;
                 }
             };*/
-public class userInfo implements Serializable{
+public class userInfo implements Serializable {
     private double weight;
     private boolean weightType;//true for kilograms, false for pounds
     private boolean genderType;//true for male, false for female
@@ -80,13 +80,13 @@ public class userInfo implements Serializable{
         this.drinks = drinks;
     }
 
-    public String toPrefsString(userInfo userInfo){
+    public String toPrefsString(userInfo userInfo) {
 
-        return weight+"/"+weightType+"/"+genderType+"/"+tHour+"/"+tMinute+"/"+drinks;
+        return weight + "/" + weightType + "/" + genderType + "/" + tHour + "/" + tMinute + "/" + drinks;
     }
 
-    public userInfo readPrefsString(String prefsString){
-        if(!(prefsString.equals("") || prefsString == null)) {
+    public userInfo readPrefsString(String prefsString) {
+        if (!(prefsString.equals("") || prefsString == null)) {
             String[] parts = prefsString.split("/");
             weight = Double.parseDouble(parts[0]);
             weightType = Boolean.parseBoolean(parts[1]);

@@ -3,7 +3,9 @@ package brillianceanimationstudio.brandonward.baccalculator.service;
 /**
  * Created by BrandonWard on 7/21/2014.
  */
+
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
+
 import java.io.*;
 import java.util.*;
 
@@ -24,11 +26,12 @@ public class userInfoSIOImpl {
             }
         }
     }
-    public userInfo getUserInfo(){
+
+    public userInfo getUserInfo() {
         return userInfo;
     }
 
-    public userInfo updateUserInfo(userInfo userInfo){
+    public userInfo updateUserInfo(userInfo userInfo) {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
             out.writeObject(userInfo);

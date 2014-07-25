@@ -7,9 +7,10 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
-
 
 
 /**
@@ -19,14 +20,13 @@ import brillianceanimationstudio.brandonward.baccalculator.domain.*;
  * to handle interaction events.
  * Use the {@link BldAlcCntntCalculation#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class BldAlcCntntCalculation extends Fragment {
     private static final String USER_PARAM = "user";
     private String USER_STATE;
 
     private userInfo bUserInfo;
-    // TODO: Rename parameter arguments, choose names that match
+    private double drinksCnt;
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private OnFragmentInteractionListener mListener;
 
@@ -37,28 +37,29 @@ public class BldAlcCntntCalculation extends Fragment {
      * @param userInfo receives the current userInfo.
      * @return A new instance of fragment BldAlcCntntCalculation.
      */
-    // TODO: Rename and change types and number of parameters
     public static BldAlcCntntCalculation newInstance(userInfo userInfo) {
         BldAlcCntntCalculation fragment = new BldAlcCntntCalculation();
         Bundle args = new Bundle();
-        if (userInfo != null){
+        if (userInfo != null) {
             args.putSerializable(USER_PARAM, userInfo);
         }
         fragment.setArguments(args);
         return fragment;
     }
+
     public BldAlcCntntCalculation() {
         // Required empty public constructor
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return "BldAlcCntntCalculationFragment";
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        USER_STATE= getUserInfo().getPrefsKey();
+        USER_STATE = getUserInfo().getPrefsKey();
         if (getArguments() != null) {
             bUserInfo = (userInfo) getArguments().getSerializable(USER_PARAM);
         }
@@ -67,11 +68,31 @@ public class BldAlcCntntCalculation extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_bld_alc_cntnt_calculation, container, false);
+        drinksCnt = bUserInfo.getDrinks();
+        final EditText drinkCount = (EditText) view.findViewById(R.id.drinkCount);
+        Button plusDrink = (Button) view.findViewById(R.id.plusOneDrink);
+        Button minusDrink = (Button) view.findViewById(R.id.minusOneDrink);
+        drinkCount.setText(Double.toString(getUserInfo().getDrinks()));//TODO Claims this is breaking, but this is not the real issue...
+        plusDrink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                drinksCnt++;
+                bUserInfo.setDrinks(drinksCnt);
+                plusDrinkPressed(bUserInfo);
+            }
+        });
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bld_alc_cntnt_calculation, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
+    public void plusDrinkPressed(userInfo userInfo){
+        if (mListener != null){
+            mListener.plusOneDrinkPressed(userInfo);
+        }
+    }
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -104,7 +125,7 @@ public class BldAlcCntntCalculation extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -112,6 +133,7 @@ public class BldAlcCntntCalculation extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+        public void plusOneDrinkPressed(userInfo userInfo);
     }
 
 }

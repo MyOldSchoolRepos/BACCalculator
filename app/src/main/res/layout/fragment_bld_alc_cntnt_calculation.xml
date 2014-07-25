@@ -60,16 +60,16 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/drinkCount"
             android:layout_below="@+id/drinkTitle"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="#ffffffff"
             android:textSize="30dp"
             android:layout_marginTop="15dp"
-            android:textColor="#ff0011ff" />
+            android:textColor="#ff0011ff"
+            android:layout_toLeftOf="@+id/plusOneDrink"
+            android:layout_toStartOf="@+id/plusOneDrink" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,7 +77,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="My Blood Alcohol Content:"
             android:id="@+id/bloodAlcCntTitle"
-            android:layout_below="@+id/editText"
+            android:layout_below="@+id/drinkCount"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="#ffffffff"
@@ -99,6 +99,35 @@
             android:textColor="#ffde0c1b"
             android:textStyle="bold"
             android:gravity="center_vertical|center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+1 Drink"
+            android:id="@+id/plusOneDrink"
+            android:layout_toEndOf="@+id/drinkTitle"
+            android:layout_alignTop="@+id/drinkTitle"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/drinkTitle"
+            android:background="#ff57e727"
+            android:layout_above="@+id/drinkCount"
+            android:layout_marginLeft="10dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-1 Drink"
+            android:id="@+id/minusOneDrink"
+            android:layout_toEndOf="@+id/drinkCount"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="#ffc80a09"
+            android:textColor="#ffffffff"
+            android:layout_alignTop="@+id/drinkCount"
+            android:layout_above="@+id/bloodAlcCntTitle"
+            android:layout_toRightOf="@+id/drinkCount"
+            android:layout_marginLeft="10dp" />
 
     </RelativeLayout>
 </FrameLayout>
