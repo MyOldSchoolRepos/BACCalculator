@@ -35,12 +35,17 @@ public class calculateBAC {
         waterConstant = getGenderWaterConstant(user.isGenderType());
         metabolismConstant = getGenderMetabolismConstant(user.isGenderType());
         drinks = user.getDrinks();
-        drinkingPeriod = calculateDrinkingPeriod(user);
-        double waterXweight = waterConstant*weight;
-        double metabXdrinkPrd = metabolismConstant*drinkingPeriod;
-        BLOOD_ALCOHOL_CONTENT = (0.806 * drinks * 1.2);
-        BLOOD_ALCOHOL_CONTENT = BLOOD_ALCOHOL_CONTENT/(waterXweight);
-        BLOOD_ALCOHOL_CONTENT = BLOOD_ALCOHOL_CONTENT - (metabXdrinkPrd);
+        if (drinks > 0) {
+            drinkingPeriod = calculateDrinkingPeriod(user);
+            double waterXweight = waterConstant * weight;
+            double metabXdrinkPrd = metabolismConstant * drinkingPeriod;
+            BLOOD_ALCOHOL_CONTENT = (0.806 * drinks * 1.2);
+            BLOOD_ALCOHOL_CONTENT = BLOOD_ALCOHOL_CONTENT / (waterXweight);
+            BLOOD_ALCOHOL_CONTENT = BLOOD_ALCOHOL_CONTENT - (metabXdrinkPrd);
+        }
+        else{
+            BLOOD_ALCOHOL_CONTENT = 0;
+        }
         // TODO: Remove this formula if it now works
         // BLOOD_ALCOHOL_CONTENT = (((0.806 * drinks * 1.2) / (waterConstant * weight)) - (metabolismConstant * drinkingPeriod));
         return BLOOD_ALCOHOL_CONTENT;

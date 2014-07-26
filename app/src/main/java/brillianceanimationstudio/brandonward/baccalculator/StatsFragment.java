@@ -110,9 +110,9 @@ public class StatsFragment extends Fragment {
             poundsBtn.setChecked(true);
         }
         if (getUserInfo().isGenderType()) {
-            femaleBtn.setChecked(true);
-        } else {
             maleBtn.setChecked(true);
+        } else {
+            femaleBtn.setChecked(true);
         }
         weightAmt.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override//Makes the 'Done' button also save stats.
@@ -134,9 +134,9 @@ public class StatsFragment extends Fragment {
                     getUserInfo().setWeightType(false);
                 }
                 if (maleBtn.isChecked()) {
-                    getUserInfo().setGenderType(false);
-                } else {
                     getUserInfo().setGenderType(true);
+                } else {
+                    getUserInfo().setGenderType(false);
                 }
                 onSavePressed(mUserInfo);
             }

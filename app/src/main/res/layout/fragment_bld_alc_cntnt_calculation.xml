@@ -130,19 +130,5 @@
             android:layout_toRightOf="@+id/drinkCount"
             android:layout_marginLeft="10dp" />
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yesterday?"
-            android:id="@+id/yesterdayBox"
-            android:layout_toEndOf="@+id/timeTitle"
-            android:textColor="#ffffffff"
-            android:checked="false"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignLeft="@+id/plusOneDrink"
-            android:layout_alignStart="@+id/plusOneDrink" />
-
     </RelativeLayout>
 </FrameLayout>

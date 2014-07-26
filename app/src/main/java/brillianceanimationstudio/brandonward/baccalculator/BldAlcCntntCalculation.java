@@ -3,9 +3,13 @@ package brillianceanimationstudio.brandonward.baccalculator;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -76,20 +80,12 @@ public class BldAlcCntntCalculation extends Fragment {
         View view = inflater.inflate(R.layout.fragment_bld_alc_cntnt_calculation, container, false);
         drinksCnt = bUserInfo.getDrinks();
         TimePicker firstDrink = (TimePicker) view.findViewById(R.id.timePicker);
-        final EditText drinkCount = (EditText) view.findViewById(R.id.drinkCount);
+        EditText drinkCount = (EditText) view.findViewById(R.id.drinkCount);
         Button plusDrink = (Button) view.findViewById(R.id.plusOneDrink);
         Button minusDrink = (Button) view.findViewById(R.id.minusOneDrink);
-        Calendar checkDay = Calendar.getInstance();
-        CheckBox setYesterday = (CheckBox) view.findViewById(R.id.yesterdayBox);
         drinkCount.setText(Double.toString(getUserInfo().getDrinks()));
         firstDrink.setCurrentHour(bUserInfo.gettHour());
         firstDrink.setCurrentMinute(bUserInfo.gettMinute());
-        if (checkDay.get(Calendar.DAY_OF_MONTH) != bUserInfo.getLastDay()){
-            setYesterday.setChecked(true);
-        }
-        else{
-            setYesterday.setChecked(false);
-        }
         plusDrink.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -108,7 +104,7 @@ public class BldAlcCntntCalculation extends Fragment {
                 changeDrinkAmtPressed(bUserInfo);
             }
         });
-        firstDrink.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener(){
+        firstDrink.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
@@ -117,24 +113,23 @@ public class BldAlcCntntCalculation extends Fragment {
                 timeChanged(bUserInfo);
             }
         });
-
-        setYesterday.setOnClickListener(new CheckBox.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                CheckBox box = (CheckBox) v;
-                if (box.isChecked()){
-                    bUserInfo.setLastDay(bUserInfo.getLastDay()-1);
+        drinkCount.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override//Makes the 'Done' button also input drinks.
+            public boolean onEditorAction(TextView drinkCount, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    bUserInfo.setDrinks(Double.parseDouble(drinkCount.getText().toString()));
+                    changeDrinkAmtPressed(bUserInfo);
+                    return true;
                 }
-                else{
-                    bUserInfo.setLastDay(bUserInfo.getLastDay()+1);
-                }
-                timeChanged(bUserInfo);
+                return false;
             }
         });
-        TextView BACCalc = (TextView) view.findViewById(R.id.userBACValue);
-        BACCalc.setText(String.format("%.6f",new calculateBAC(bUserInfo).calculateBloodAlcoholContent()));
-        // Inflate the layout for this fragment
+        TextView BACCalculation = (TextView) view.findViewById(R.id.userBACValue);
+        double bacVal = new calculateBAC(bUserInfo).calculateBloodAlcoholContent();
+        if (bacVal < 0){
+            bacVal = 0.0;
+        }
+        BACCalculation.setText(String.format("%.6f",bacVal));
         return view;
     }
 

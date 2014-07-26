@@ -57,16 +57,16 @@ public class MainBAC extends Activity
         if (userInfo.gettMinute()+ userInfo.gettHour()+ userInfo.getLastDay()+userInfo.getLastMonth()+userInfo.getLastYear()==0){
             userInfo.settMinute(runtime.get(Calendar.MINUTE));
             userInfo.settHour(runtime.get(Calendar.HOUR));
-            userInfo.setLastDay(runtime.get(Calendar.DATE));
+            userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));
             userInfo.setLastMonth(runtime.get(Calendar.MONTH));
             userInfo.setLastYear(runtime.get(Calendar.YEAR));
         }
         else if (runtime.get(Calendar.YEAR) - userInfo.getLastYear() <= 1 ) {
             if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
-                if (!((runtime.get(Calendar.MINUTE) + runtime.get(Calendar.HOUR) * 60 + runtime.get(Calendar.DATE) * 24 * 60) - (userInfo.gettMinute() + userInfo.gettHour() * 60 + userInfo.getLastDay()) < 1440)) {
+                if (!((runtime.get(Calendar.HOUR) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24)) {
                     userInfo.settMinute(runtime.get(Calendar.MINUTE));
                     userInfo.settHour(runtime.get(Calendar.HOUR));
-                    userInfo.setLastDay(runtime.get(Calendar.DATE));
+                    userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));
                     userInfo.setLastMonth(runtime.get(Calendar.MONTH));
                     userInfo.setLastYear(runtime.get(Calendar.YEAR));
                     userInfo.setDrinks(0.0);
