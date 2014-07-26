@@ -15,7 +15,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
-import brillianceanimationstudio.brandonward.baccalculator.engine.CalculateBAC;
+import brillianceanimationstudio.brandonward.baccalculator.engine.calculateBAC;
 
 
 /**
@@ -133,7 +133,7 @@ public class BldAlcCntntCalculation extends Fragment {
             }
         });
         TextView BACCalc = (TextView) view.findViewById(R.id.userBACValue);
-        BACCalc.setText(String.format("%.6f",new CalculateBAC(bUserInfo).calculateBloodAlcoholContent()));
+        BACCalc.setText(String.format("%.6f",new calculateBAC(bUserInfo).calculateBloodAlcoholContent()));
         // Inflate the layout for this fragment
         return view;
     }
