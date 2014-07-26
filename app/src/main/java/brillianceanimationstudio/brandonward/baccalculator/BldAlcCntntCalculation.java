@@ -1,16 +1,21 @@
 package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
+import brillianceanimationstudio.brandonward.baccalculator.engine.CalculateBAC;
 
 
 /**
@@ -70,32 +75,79 @@ public class BldAlcCntntCalculation extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bld_alc_cntnt_calculation, container, false);
         drinksCnt = bUserInfo.getDrinks();
+        TimePicker firstDrink = (TimePicker) view.findViewById(R.id.timePicker);
         final EditText drinkCount = (EditText) view.findViewById(R.id.drinkCount);
         Button plusDrink = (Button) view.findViewById(R.id.plusOneDrink);
         Button minusDrink = (Button) view.findViewById(R.id.minusOneDrink);
+        Calendar checkDay = Calendar.getInstance();
+        CheckBox setYesterday = (CheckBox) view.findViewById(R.id.yesterdayBox);
         drinkCount.setText(Double.toString(getUserInfo().getDrinks()));
+        firstDrink.setCurrentHour(bUserInfo.gettHour());
+        firstDrink.setCurrentMinute(bUserInfo.gettMinute());
+        if (checkDay.get(Calendar.DAY_OF_MONTH) != bUserInfo.getLastDay()){
+            setYesterday.setChecked(true);
+        }
+        else{
+            setYesterday.setChecked(false);
+        }
         plusDrink.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                drinksCnt++;
+                drinksCnt = drinksCnt + 1.0;
                 bUserInfo.setDrinks(drinksCnt);
-                plusDrinkPressed(bUserInfo);
+                changeDrinkAmtPressed(bUserInfo);
             }
         });
+        minusDrink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                drinksCnt = drinksCnt - 1.0;
+                bUserInfo.setDrinks(drinksCnt);
+                changeDrinkAmtPressed(bUserInfo);
+            }
+        });
+        firstDrink.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener(){
+
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                bUserInfo.settHour(hourOfDay);
+                bUserInfo.settMinute(minute);
+                timeChanged(bUserInfo);
+            }
+        });
+
+        setYesterday.setOnClickListener(new CheckBox.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                CheckBox box = (CheckBox) v;
+                if (box.isChecked()){
+                    bUserInfo.setLastDay(bUserInfo.getLastDay()-1);
+                }
+                else{
+                    bUserInfo.setLastDay(bUserInfo.getLastDay()+1);
+                }
+                timeChanged(bUserInfo);
+            }
+        });
+        TextView BACCalc = (TextView) view.findViewById(R.id.userBACValue);
+        BACCalc.setText(String.format("%.6f",new CalculateBAC(bUserInfo).calculateBloodAlcoholContent()));
         // Inflate the layout for this fragment
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void plusDrinkPressed(userInfo userInfo){
+    public void changeDrinkAmtPressed(userInfo userInfo){
         if (mListener != null){
-            mListener.plusOneDrinkPressed(userInfo);
+            mListener.changeDrinkCntByBtn(userInfo);
         }
     }
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+    public void timeChanged(userInfo userInfo){
+        if (mListener != null){
+            mListener.timeWasChanged(userInfo);
         }
     }
 
@@ -132,8 +184,8 @@ public class BldAlcCntntCalculation extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-        public void plusOneDrinkPressed(userInfo userInfo);
+        public void changeDrinkCntByBtn(userInfo userInfo);
+        public void timeWasChanged(userInfo userInfo);
     }
 
 }

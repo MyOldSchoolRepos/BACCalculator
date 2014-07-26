@@ -1,5 +1,7 @@
 package brillianceanimationstudio.brandonward.baccalculator.domain;
 
+import android.widget.Toast;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -82,19 +84,24 @@ public class userInfo implements Serializable {
 
     public String toPrefsString(userInfo userInfo) {
 
-        return weight + "/" + weightType + "/" + genderType + "/" + tHour + "/" + tMinute + "/" + drinks;
+        return weight + "/" + weightType + "/" + genderType + "/" + tHour + "/" + tMinute + "/" + drinks
+                + "/" + lastDay + "/" + lastMonth + "/" + lastYear;
     }
 
     public userInfo readPrefsString(String prefsString) {
-        if (!(prefsString.equals("") || prefsString == null)) {
-            String[] parts = prefsString.split("/");
-            weight = Double.parseDouble(parts[0]);
-            weightType = Boolean.parseBoolean(parts[1]);
-            genderType = Boolean.parseBoolean(parts[2]);
-            tHour = Integer.parseInt(parts[3]);
-            tMinute = Integer.parseInt(parts[4]);
-            drinks = Double.parseDouble(parts[5]);
-        }
+//This number needs to match however many components I am saving.
+            if (!(prefsString.equals("") || prefsString == null)) {
+                String[] parts = prefsString.split("/");
+                weight = Double.parseDouble(parts[0]);
+                weightType = Boolean.parseBoolean(parts[1]);
+                genderType = Boolean.parseBoolean(parts[2]);
+                tHour = Integer.parseInt(parts[3]);
+                tMinute = Integer.parseInt(parts[4]);
+                drinks = Double.parseDouble(parts[5]);
+                lastDay = Integer.parseInt(parts[6]);
+                lastMonth = Integer.parseInt(parts[7]);
+                lastYear = Integer.parseInt(parts[8]);
+            }
         return this;
     }
 

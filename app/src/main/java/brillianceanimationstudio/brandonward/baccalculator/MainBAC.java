@@ -7,21 +7,18 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
-import brillianceanimationstudio.brandonward.baccalculator.service.userInfoSIOImpl;
 
 import com.google.android.gms.ads.*;
+
+import java.util.Calendar;
 
 
 public class MainBAC extends Activity
@@ -56,6 +53,26 @@ public class MainBAC extends Activity
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         String user_state = prefs.getString(USER_STATE, "");
         userInfo = getUserInfo().readPrefsString(user_state);
+        Calendar runtime = Calendar.getInstance();
+        if (userInfo.gettMinute()+ userInfo.gettHour()+ userInfo.getLastDay()+userInfo.getLastMonth()+userInfo.getLastYear()==0){
+            userInfo.settMinute(runtime.get(Calendar.MINUTE));
+            userInfo.settHour(runtime.get(Calendar.HOUR));
+            userInfo.setLastDay(runtime.get(Calendar.DATE));
+            userInfo.setLastMonth(runtime.get(Calendar.MONTH));
+            userInfo.setLastYear(runtime.get(Calendar.YEAR));
+        }
+        else if (runtime.get(Calendar.YEAR) - userInfo.getLastYear() <= 1 ) {
+            if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
+                if (!((runtime.get(Calendar.MINUTE) + runtime.get(Calendar.HOUR) * 60 + runtime.get(Calendar.DATE) * 24 * 60) - (userInfo.gettMinute() + userInfo.gettHour() * 60 + userInfo.getLastDay()) < 1440)) {
+                    userInfo.settMinute(runtime.get(Calendar.MINUTE));
+                    userInfo.settHour(runtime.get(Calendar.HOUR));
+                    userInfo.setLastDay(runtime.get(Calendar.DATE));
+                    userInfo.setLastMonth(runtime.get(Calendar.MONTH));
+                    userInfo.setLastYear(runtime.get(Calendar.YEAR));
+                    userInfo.setDrinks(0.0);
+                }
+            }
+        }
         setContentView(R.layout.activity_main_bac);
 
         // Create the interstitial //
@@ -196,32 +213,39 @@ public class MainBAC extends Activity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void plusOneDrinkPressed(userInfo userInfo) {
+    public void changeDrinkCntByBtn(userInfo userInfo) {
         if (userInfo != null){
             this.userInfo = userInfo;
         }
         else {
             userInfo = this.userInfo;
         }
+        saveUserInfoToSharedPrefs(userInfo);
         FragmentManager fragmentManager = getFragmentManager();
         Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .setTransition(FragmentTransaction.TRANSIT_NONE)
                 .commit();
-        if (adCount % 3 == 2) {
-            displayInterstitial();
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-            SharedPreferences.Editor editor = prefs.edit();
-            adCount++;
-            editor.putInt("adCount", adCount).apply();
+    }
+
+    @Override
+    public void timeWasChanged(userInfo userInfo) {
+        if (userInfo != null){
+            this.userInfo = userInfo;
         }
+        else {
+            userInfo = this.userInfo;
+        }
+        saveUserInfoToSharedPrefs(userInfo);
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
+        VISIBLE_FRAGMENT_TAG = newFragment.toString();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
+                .setTransition(FragmentTransaction.TRANSIT_NONE)
+                .commit();
     }
 
     public userInfo getUserInfo() {
@@ -230,13 +254,15 @@ public class MainBAC extends Activity
 
     @Override
     public void saveStats(userInfo userInfo) {
-        this.userInfo = userInfo;
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String user_state = getUserInfo().toPrefsString(getUserInfo());
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(USER_STATE, user_state).apply();
-        userInfoSIOImpl impl = new userInfoSIOImpl();
-        impl.updateUserInfo(getUserInfo());
+        if (userInfo != null){
+            this.userInfo = userInfo;
+        }
+        else {
+            userInfo = this.userInfo;
+        }
+        saveUserInfoToSharedPrefs(userInfo);
+//        userInfoSIOImpl impl = new userInfoSIOImpl();
+//        impl.updateUserInfo(getUserInfo());
         Toast.makeText(getApplicationContext(), "Stats Saved!", Toast.LENGTH_LONG).show();
         FragmentManager fragmentManager = getFragmentManager();
         Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
@@ -245,12 +271,6 @@ public class MainBAC extends Activity
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
-        if (adCount % 3 == 2) {
-            displayInterstitial();
-            editor = prefs.edit();
-            adCount++;
-            editor.putInt("adCount", adCount).apply();
-        }
     }
 
     @Override
@@ -273,49 +293,19 @@ public class MainBAC extends Activity
 
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main_bac_start, container, false);
-
-
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainBAC) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
+    public void saveUserInfoToSharedPrefs(userInfo userInfo){
+        this.userInfo = userInfo;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String user_state = getUserInfo().toPrefsString(getUserInfo());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(USER_STATE, user_state).apply();
+        if (adCount % 3 == 2) {
+            displayInterstitial();
+            editor = prefs.edit();
+            adCount++;
+            editor.putInt("adCount", adCount).apply();
         }
     }
-
-
     public void displayInterstitial() {
         if (interstitial.isLoaded()) {
             interstitial.show();
