@@ -1,6 +1,7 @@
 package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Editable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -83,6 +85,8 @@ public class BldAlcCntntCalculation extends Fragment {
         EditText drinkCount = (EditText) view.findViewById(R.id.drinkCount);
         Button plusDrink = (Button) view.findViewById(R.id.plusOneDrink);
         Button minusDrink = (Button) view.findViewById(R.id.minusOneDrink);
+        final Button goTime = (Button) view.findViewById(R.id.goTimeButton);
+        goTime.setVisibility(View.GONE);
         drinkCount.setText(Double.toString(getUserInfo().getDrinks()));
         firstDrink.setCurrentHour(bUserInfo.gettHour());
         firstDrink.setCurrentMinute(bUserInfo.gettMinute());
@@ -110,18 +114,29 @@ public class BldAlcCntntCalculation extends Fragment {
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                 bUserInfo.settHour(hourOfDay);
                 bUserInfo.settMinute(minute);
-                timeChanged(bUserInfo);
+                goTime.setVisibility(View.VISIBLE);
             }
         });
         drinkCount.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override//Makes the 'Done' button also input drinks.
             public boolean onEditorAction(TextView drinkCount, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        InputMethodManager imm;
+                        imm = (InputMethodManager) getActivity().getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(drinkCount.getApplicationWindowToken(), 0);
                     bUserInfo.setDrinks(Double.parseDouble(drinkCount.getText().toString()));
                     changeDrinkAmtPressed(bUserInfo);
                     return true;
                 }
                 return false;
+            }
+        });
+        goTime.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                timeChanged(bUserInfo);
             }
         });
         TextView BACCalculation = (TextView) view.findViewById(R.id.userBACValue);

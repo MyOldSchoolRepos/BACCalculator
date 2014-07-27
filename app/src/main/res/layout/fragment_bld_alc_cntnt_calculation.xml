@@ -130,5 +130,19 @@
             android:layout_toRightOf="@+id/drinkCount"
             android:layout_marginLeft="10dp" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GO!!!"
+            android:id="@+id/goTimeButton"
+            android:layout_toEndOf="@+id/timeTitle"
+            android:layout_alignTop="@+id/timePicker"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/timeTitle"
+            android:background="#ff1fdf19"
+            android:textStyle="bold"
+            android:textSize="25dp" />
+
     </RelativeLayout>
 </FrameLayout>

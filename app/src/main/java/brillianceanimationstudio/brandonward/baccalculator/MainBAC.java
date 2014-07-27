@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.*;
 
 import java.util.Calendar;
@@ -56,16 +57,16 @@ public class MainBAC extends Activity
         Calendar runtime = Calendar.getInstance();
         if (userInfo.gettMinute()+ userInfo.gettHour()+ userInfo.getLastDay()+userInfo.getLastMonth()+userInfo.getLastYear()==0){
             userInfo.settMinute(runtime.get(Calendar.MINUTE));
-            userInfo.settHour(runtime.get(Calendar.HOUR));
+            userInfo.settHour(runtime.get(Calendar.HOUR_OF_DAY));
             userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));
             userInfo.setLastMonth(runtime.get(Calendar.MONTH));
             userInfo.setLastYear(runtime.get(Calendar.YEAR));
         }
         else if (runtime.get(Calendar.YEAR) - userInfo.getLastYear() <= 1 ) {
             if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
-                if (!((runtime.get(Calendar.HOUR) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24)) {
+                if (!((runtime.get(Calendar.HOUR_OF_DAY) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24) && userInfo.getLastDay() != 0) {
                     userInfo.settMinute(runtime.get(Calendar.MINUTE));
-                    userInfo.settHour(runtime.get(Calendar.HOUR));
+                    userInfo.settHour(runtime.get(Calendar.HOUR_OF_DAY));
                     userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));
                     userInfo.setLastMonth(runtime.get(Calendar.MONTH));
                     userInfo.setLastYear(runtime.get(Calendar.YEAR));
@@ -111,6 +112,18 @@ public class MainBAC extends Activity
         }
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("adCount", adCount).apply();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance(this).activityStop(this);  // Add this method.
     }
 
     @Override
