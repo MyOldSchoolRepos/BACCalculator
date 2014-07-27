@@ -1,5 +1,5 @@
 package brillianceanimationstudio.brandonward.baccalculator;
-
+// TODO: An initial check seemed to look like it was falsely reporting my BAC... .34... AKA, I'd be dead with 3 drinks. Seemed to fix itself, will look further into this as alpha testing progresses.
 import android.app.Activity;
 
 import android.app.ActionBar;
@@ -144,7 +144,7 @@ public class MainBAC extends Activity
                 newFragment = new WelcomeScreenFragment().newInstance(userInfo);
                 break;
             case 1:
-                newFragment = new StatsFragment().newInstance(userInfo);// TODO: Make all of these that need info use newInstance();
+                newFragment = new StatsFragment().newInstance(userInfo);
                 break;
             case 2:
                 newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
@@ -162,6 +162,19 @@ public class MainBAC extends Activity
             SharedPreferences.Editor editor = prefs.edit();
             adCount++;
             editor.putInt("adCount", adCount).apply();
+        }
+    }
+
+    @Override
+    public void actionBarCalculate() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (userInfo.getWeight() != 0) {
+            fragmentTransaction.replace(R.id.container, BldAlcCntntCalculation.newInstance(userInfo))
+                    .commit();
+        } else {
+            fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(userInfo))
+                    .commit();
         }
     }
 
@@ -207,9 +220,9 @@ public class MainBAC extends Activity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+/*        if (id == R.id.action_settings) { //TODO uncomment this if I ever re-support 'Settings'
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 

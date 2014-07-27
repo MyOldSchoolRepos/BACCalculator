@@ -8,7 +8,7 @@
     <string name="title_section3">Blood Alcohol Content</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
+    <string name="action_example">Calculate Now!</string>
     <string name="action_settings">Settings</string>
     <string name="updates">Version 1.0\n\nThanks for Downloading!</string>
     <string name="eula">This app is intended for entertainment purposes only.  The content and information displayed in this app should not be your deciding factor for determining blood alcohol content while drinking.  Only you know how much you have really had.  Please drink responsibly.  The owners of this app claim no responsibility for the actions of the end users of this product.  By clicking \'OK\' you (the end user) agree that the owners of this app are not liable for any actions of the end user(s).</string>

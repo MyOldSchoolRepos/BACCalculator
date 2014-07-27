@@ -202,6 +202,12 @@ public class NavigationDrawerFragment extends Fragment {
         }
     }
 
+    private void calculateFromActionBar(){
+        if (mCallbacks!=null){
+            mCallbacks.actionBarCalculate();
+        }
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -248,9 +254,8 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example Action.", Toast.LENGTH_SHORT).show();
-            // TODO: Make this "Calculate Now" and call validates and update BAC stuff, etc... and find where this originates.
+        if (item.getItemId() == R.id.action_calculate) {
+            calculateFromActionBar();
             return true;
         }
 
@@ -280,6 +285,7 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+        public void actionBarCalculate();
     }
 
 }
