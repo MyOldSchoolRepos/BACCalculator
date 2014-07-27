@@ -17,6 +17,7 @@ import android.widget.Toast;
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.android.gms.ads.*;
 
 import java.util.Calendar;
@@ -117,6 +118,8 @@ public class MainBAC extends Activity
     @Override
     public void onStart() {
         super.onStart();
+        // TODO: setDryRun(true) for development, setDryRun(false) for production.
+        GoogleAnalytics.getInstance(this).setDryRun(true);
         EasyTracker.getInstance(this).activityStart(this);  // Add this method.
     }
 
