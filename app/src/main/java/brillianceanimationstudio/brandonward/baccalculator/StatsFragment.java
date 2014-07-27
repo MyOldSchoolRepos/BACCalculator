@@ -20,6 +20,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
 import brillianceanimationstudio.brandonward.baccalculator.service.*;
 
@@ -92,10 +94,9 @@ public class StatsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
+        final DecimalFormat weightFormat = new DecimalFormat("0.###");
         mButton = (Button) view.findViewById(R.id.SaveStatsButton);
         weightAmt = (EditText) view.findViewById(R.id.weightAmt);
         kiloBtn = (RadioButton) view.findViewById(R.id.kilogramsButton);
@@ -105,7 +106,7 @@ public class StatsFragment extends Fragment {
         femaleBtn = (RadioButton) view.findViewById(R.id.femaleButton);
         genderSelect = (RadioGroup) view.findViewById(R.id.genderMetric);
         //Set all base attributes of fragment
-        weightAmt.setText(Double.toString(getUserInfo().getWeight()));
+        weightAmt.setText(weightFormat.format(getUserInfo().getWeight()));
         if (getUserInfo().isWeightType()) {
             kiloBtn.setChecked(true);
         } else {

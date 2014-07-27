@@ -64,7 +64,7 @@ public class MainBAC extends Activity
         }
 
             if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
-                if (!((runtime.get(Calendar.HOUR_OF_DAY) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24) && userInfo.getLastDay() != 0) {
+                if (!((runtime.get(Calendar.HOUR_OF_DAY) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24) && runtime.get(Calendar.DAY_OF_MONTH) != 0) {
                     userInfo.settMinute(runtime.get(Calendar.MINUTE));
                     userInfo.settHour(runtime.get(Calendar.HOUR_OF_DAY));
                     userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));

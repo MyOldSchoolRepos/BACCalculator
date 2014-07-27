@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
@@ -87,7 +88,8 @@ public class BldAlcCntntCalculation extends Fragment {
         Button minusDrink = (Button) view.findViewById(R.id.minusOneDrink);
         final Button goTime = (Button) view.findViewById(R.id.goTimeButton);
         goTime.setVisibility(View.GONE);
-        drinkCount.setText(Double.toString(getUserInfo().getDrinks()));
+        final DecimalFormat drinkFormat = new DecimalFormat("0.####");
+        drinkCount.setText(drinkFormat.format(drinksCnt));
         firstDrink.setCurrentHour(bUserInfo.gettHour());
         firstDrink.setCurrentMinute(bUserInfo.gettMinute());
         plusDrink.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +105,12 @@ public class BldAlcCntntCalculation extends Fragment {
 
             @Override
             public void onClick(View v) {
-                drinksCnt = drinksCnt - 1.0;
+                if (drinksCnt >= 1) {
+                    drinksCnt = drinksCnt - 1.0;
+                }
+                else {
+                    drinksCnt = 0.0;
+                }
                 bUserInfo.setDrinks(drinksCnt);
                 changeDrinkAmtPressed(bUserInfo);
             }
