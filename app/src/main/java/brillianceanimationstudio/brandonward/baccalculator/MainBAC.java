@@ -1,5 +1,4 @@
 package brillianceanimationstudio.brandonward.baccalculator;
-// TODO: An initial check seemed to look like it was falsely reporting my BAC... .34... AKA, I'd be dead with 3 drinks. Seemed to fix itself, will look further into this as alpha testing progresses.
 import android.app.Activity;
 
 import android.app.ActionBar;
