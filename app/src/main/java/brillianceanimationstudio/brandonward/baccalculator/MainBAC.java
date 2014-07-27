@@ -63,7 +63,7 @@ public class MainBAC extends Activity
             userInfo.setLastMonth(runtime.get(Calendar.MONTH));
             userInfo.setLastYear(runtime.get(Calendar.YEAR));
         }
-        else if (runtime.get(Calendar.YEAR) - userInfo.getLastYear() <= 1 ) {
+
             if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
                 if (!((runtime.get(Calendar.HOUR_OF_DAY) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24) && userInfo.getLastDay() != 0) {
                     userInfo.settMinute(runtime.get(Calendar.MINUTE));
@@ -74,7 +74,7 @@ public class MainBAC extends Activity
                     userInfo.setDrinks(0.0);
                 }
             }
-        }
+
         setContentView(R.layout.activity_main_bac);
 
         // Create the interstitial //
@@ -119,8 +119,8 @@ public class MainBAC extends Activity
     public void onStart() {
         super.onStart();
         // TODO: setDryRun(true) for development, setDryRun(false) for production.
-        GoogleAnalytics.getInstance(this).setDryRun(true);
         EasyTracker.getInstance(this).activityStart(this);  // Add this method.
+        GoogleAnalytics.getInstance(this).setDryRun(false);
     }
 
     @Override

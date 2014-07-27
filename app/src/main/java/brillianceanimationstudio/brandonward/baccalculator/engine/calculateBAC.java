@@ -75,7 +75,7 @@ public class calculateBAC {
     private double calculateDrinkingPeriod(userInfo userInfo) {
         double drinkingPeriod;
         Calendar rightNow = Calendar.getInstance();
-        if (rightNow.get(Calendar.HOUR_OF_DAY) < userInfo.gettHour() && (rightNow.get(Calendar.MINUTE) < userInfo.gettMinute())){
+        if ((rightNow.get(Calendar.HOUR_OF_DAY)*60 + rightNow.get(Calendar.MINUTE)) < (userInfo.gettHour()*60 + userInfo.gettMinute())){
             drinkingPeriod = (rightNow.get(Calendar.HOUR_OF_DAY)*60+rightNow.get(Calendar.MINUTE)+24*60)-(userInfo.gettHour()*60+userInfo.gettMinute());
             drinkingPeriod = drinkingPeriod/60;
         }
