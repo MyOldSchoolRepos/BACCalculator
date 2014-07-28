@@ -5,9 +5,17 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +28,8 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.android.gms.ads.*;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.Calendar;
 
 
@@ -29,11 +39,15 @@ public class MainBAC extends Activity
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
     private static final String AD_UNIT_ID = "ca-app-pub-1321769086734378/4674749647";
+    private static final int NOTIFICATION_ID = 711711;
+    private static final String NOTIFICATION_STATE = "showNotifications";
+    private boolean showNotifications = true;
     private String USER_STATE;
     private String VISIBLE_FRAGMENT_TAG;
     // Count until next Full Screen Ad is shown //
     private int adCount;//persisted as adCount
     private AdRequest adRequest;
+
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -53,9 +67,11 @@ public class MainBAC extends Activity
         new SimpleEula(this).show();
         USER_STATE = getUserInfo().getPrefsKey();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        //showNotifications = prefs.getBoolean(NOTIFICATION_STATE, true); TODO: not working
         String user_state = prefs.getString(USER_STATE, "");
         userInfo = getUserInfo().readPrefsString(user_state);
         Calendar runtime = Calendar.getInstance();
+        //Determine if user has been here before, and if not, set stats to right now.
         if (userInfo.gettMinute()+ userInfo.gettHour()+ userInfo.getLastDay()+userInfo.getLastMonth()+userInfo.getLastYear()==0){
             userInfo.settMinute(runtime.get(Calendar.MINUTE));
             userInfo.settHour(runtime.get(Calendar.HOUR_OF_DAY));
@@ -63,6 +79,7 @@ public class MainBAC extends Activity
             userInfo.setLastMonth(runtime.get(Calendar.MONTH));
             userInfo.setLastYear(runtime.get(Calendar.YEAR));
         }
+        //Determine user's previous BAC (if any) and reset the application runtime stats and drink count if 0.
         double testBAC = new calculateBAC(userInfo).calculateBloodAlcoholContent();
         if (testBAC < 0){
             userInfo.settMinute(runtime.get(Calendar.MINUTE));
@@ -71,44 +88,34 @@ public class MainBAC extends Activity
             userInfo.setLastMonth(runtime.get(Calendar.MONTH));
             userInfo.setLastYear(runtime.get(Calendar.YEAR));
             userInfo.setDrinks(0.0);
+            removeNotification();
         }
-
-            /*if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
-                if (!((runtime.get(Calendar.HOUR_OF_DAY) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24) && runtime.get(Calendar.DAY_OF_MONTH) != 0) {
-                }
-            }*/
-
+        else if (showNotifications){
+            addNotification();
+        }
         setContentView(R.layout.activity_main_bac);
-
         // Create the interstitial //
         interstitial = new InterstitialAd(this);
         interstitial.setAdUnitId(AD_UNIT_ID);
-
         // Create ad request //
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("EE05288C46F855BD6717EE11B4F13249")
                 .build();
         this.adRequest = adRequest;
-
         // Begin loading interstitial
         interstitial.loadAd(adRequest);
-
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, WelcomeScreenFragment.newInstance(getUserInfo()))
                 .commit();
-
-
         adCount = prefs.getInt("adCount", 0);
         adCount++;
         if (adCount > 100) {
@@ -160,6 +167,9 @@ public class MainBAC extends Activity
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
+        if (showNotifications){
+            addNotification();
+        }
         if (adCount % 3 == 2) {
             displayInterstitial();
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
@@ -176,9 +186,14 @@ public class MainBAC extends Activity
         if (userInfo.getWeight() != 0) {
             fragmentTransaction.replace(R.id.container, BldAlcCntntCalculation.newInstance(userInfo))
                     .commit();
+            onSectionAttached(3);
         } else {
             fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(userInfo))
                     .commit();
+            onSectionAttached(2);
+        }
+        if (showNotifications){
+            addNotification();
         }
     }
 
@@ -219,14 +234,37 @@ public class MainBAC extends Activity
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        super.onPrepareOptionsMenu(menu);
+/*            if (showNotifications){ // TODO: This is not working.
+                menu.getItem(R.id.action_allow_notifications).setChecked(true);
+            }
+            else{
+                menu.getItem(R.id.action_allow_notifications).setChecked(false);
+            }*/
+        return true;
+    }
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-/*        if (id == R.id.action_settings) { //TODO uncomment this if I ever re-support 'Settings'
+        if (id == R.id.action_allow_notifications) {
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            MenuItem notify = item;
+            if (notify.isChecked()){
+            //    editor.putBoolean(NOTIFICATION_STATE,true).apply(); // TODO: Not Working
+            //    showNotifications = true;
+            }
+            else{
+             //   editor.putBoolean(NOTIFICATION_STATE, false).apply();
+            //    showNotifications = false;
+            }
+            addNotification();
             return true;
-        }*/
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -262,6 +300,9 @@ public class MainBAC extends Activity
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_NONE)
                 .commit();
+        if (showNotifications){
+            addNotification();
+        }
     }
 
     @Override
@@ -281,6 +322,9 @@ public class MainBAC extends Activity
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_NONE)
                 .commit();
+        if (showNotifications){
+            addNotification();
+        }
     }
 
     public userInfo getUserInfo() {
@@ -307,6 +351,9 @@ public class MainBAC extends Activity
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
+        if (showNotifications){
+            addNotification();
+        }
     }
 
     @Override
@@ -328,7 +375,9 @@ public class MainBAC extends Activity
                 fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(userInfo))
                         .commit();
             }
-
+        if (showNotifications){
+            addNotification();
+        }
     }
 
     public void saveUserInfoToSharedPrefs(userInfo userInfo){
@@ -348,5 +397,46 @@ public class MainBAC extends Activity
         if (interstitial.isLoaded()) {
             interstitial.show();
         }
+    }
+    private void addNotification() {
+        double BAC = new calculateBAC(userInfo).calculateBloodAlcoholContent();
+        if (BAC > 0 && showNotifications) { // DO NOT SHOW NOTIFICATION IF BAC IS 0 or less && only if they want notifications
+            int hour = userInfo.gettHour();
+            int minute = userInfo.gettMinute();
+            String AM_PM;
+            if (hour < 12) {
+                AM_PM = "AM";
+            } else {
+                AM_PM = "PM";
+            }
+            hour = hour % 12;
+            final DecimalFormat BACFormat = new DecimalFormat("0.####");
+            final DecimalFormat minuteFormat = new DecimalFormat("00.#");
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_stat_name)
+                            .setLargeIcon(bm)
+                            .setContentTitle("My Blood Alcohol: " + BACFormat.format(BAC))
+                            .setContentText("First drink: " + hour + ":" + minuteFormat.format(minute) + " " + AM_PM + ". Tap to Update!");
+
+            Intent notificationIntent = new Intent(this, MainBAC.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(contentIntent);
+
+            // Add as notification
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(NOTIFICATION_ID, builder.build());
+        }
+        else{
+            removeNotification();
+        }
+    }
+
+    // Remove notification
+    private void removeNotification() {
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel(NOTIFICATION_ID);
     }
 }

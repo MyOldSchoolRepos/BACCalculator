@@ -4,6 +4,9 @@
     <item android:id="@+id/action_calculate"
         android:title="@string/action_example"
         android:showAsAction="withText|ifRoom" />
+    <item android:id="@+id/action_allow_notifications"
+        android:title="Notifications"
+        android:checkable="true"/>
     <!--<item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
