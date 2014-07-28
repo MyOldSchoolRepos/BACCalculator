@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
 import brillianceanimationstudio.brandonward.baccalculator.domain.*;
+import brillianceanimationstudio.brandonward.baccalculator.engine.calculateBAC;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -62,17 +63,20 @@ public class MainBAC extends Activity
             userInfo.setLastMonth(runtime.get(Calendar.MONTH));
             userInfo.setLastYear(runtime.get(Calendar.YEAR));
         }
+        double testBAC = new calculateBAC(userInfo).calculateBloodAlcoholContent();
+        if (testBAC < 0){
+            userInfo.settMinute(runtime.get(Calendar.MINUTE));
+            userInfo.settHour(runtime.get(Calendar.HOUR_OF_DAY));
+            userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));
+            userInfo.setLastMonth(runtime.get(Calendar.MONTH));
+            userInfo.setLastYear(runtime.get(Calendar.YEAR));
+            userInfo.setDrinks(0.0);
+        }
 
-            if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
+            /*if (runtime.get(Calendar.MONTH) - userInfo.getLastMonth() <= 1) {
                 if (!((runtime.get(Calendar.HOUR_OF_DAY) + runtime.get(Calendar.DAY_OF_MONTH) * 24) - (userInfo.gettHour() + userInfo.getLastDay()*24) < 24) && runtime.get(Calendar.DAY_OF_MONTH) != 0) {
-                    userInfo.settMinute(runtime.get(Calendar.MINUTE));
-                    userInfo.settHour(runtime.get(Calendar.HOUR_OF_DAY));
-                    userInfo.setLastDay(runtime.get(Calendar.DAY_OF_MONTH));
-                    userInfo.setLastMonth(runtime.get(Calendar.MONTH));
-                    userInfo.setLastYear(runtime.get(Calendar.YEAR));
-                    userInfo.setDrinks(0.0);
                 }
-            }
+            }*/
 
         setContentView(R.layout.activity_main_bac);
 
@@ -150,6 +154,7 @@ public class MainBAC extends Activity
                 break;
 
         }
+        onSectionAttached(position+1);
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
@@ -181,7 +186,7 @@ public class MainBAC extends Activity
 
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.app_name);
                 break;
             case 2:
                 mTitle = getString(R.string.title_section2);
@@ -252,6 +257,7 @@ public class MainBAC extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
+        onSectionAttached(3);
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
                 .setTransition(FragmentTransaction.TRANSIT_NONE)
@@ -269,6 +275,7 @@ public class MainBAC extends Activity
         saveUserInfoToSharedPrefs(userInfo);
         FragmentManager fragmentManager = getFragmentManager();
         Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
+        onSectionAttached(3);
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
@@ -294,6 +301,7 @@ public class MainBAC extends Activity
         Toast.makeText(getApplicationContext(), "Stats Saved!", Toast.LENGTH_LONG).show();
         FragmentManager fragmentManager = getFragmentManager();
         Fragment newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
+        onSectionAttached(3);
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, newFragment, VISIBLE_FRAGMENT_TAG)
@@ -312,9 +320,11 @@ public class MainBAC extends Activity
             userInfo = this.userInfo;
         }
             if (userInfo.getWeight() != 0) {
+                onSectionAttached(3);
                 fragmentTransaction.replace(R.id.container, BldAlcCntntCalculation.newInstance(userInfo))
                         .commit();
             } else {
+                onSectionAttached(2);
                 fragmentTransaction.replace(R.id.container, StatsFragment.newInstance(userInfo))
                         .commit();
             }
