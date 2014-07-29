@@ -135,7 +135,7 @@ public class MainBAC extends Activity
         super.onStart();
         // TODO: setDryRun(true) for development, setDryRun(false) for production.
         EasyTracker.getInstance(this).activityStart(this);  // Add this method.
-        GoogleAnalytics.getInstance(this).setDryRun(false);
+        GoogleAnalytics.getInstance(this).setDryRun(true);
     }
 
     @Override
