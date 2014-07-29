@@ -91,6 +91,18 @@ public class SettingsFragment extends Fragment {
                 onNotificationsSettingsChange(enableNotify, disableNotify, ongoingGroup);
             }
         });
+        enableOngoing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOngoingSettingsChange(enableOngoing, disableOngoing);
+            }
+        });
+        disableOngoing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOngoingSettingsChange(enableOngoing, disableOngoing);
+            }
+        });
         return view;
     }
 
@@ -117,8 +129,14 @@ public class SettingsFragment extends Fragment {
         onNotificationChanged(showNotifications);
     }
 
-    public void onOngoingSettingsChange(){
-
+    public void onOngoingSettingsChange(RadioButton enable, RadioButton disable){
+        if (disable.isChecked()){
+            ongoingNotifications = false;
+        }
+        else if (enable.isChecked()){
+            ongoingNotifications = true;
+        }
+        onOngoingChanged(ongoingNotifications);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

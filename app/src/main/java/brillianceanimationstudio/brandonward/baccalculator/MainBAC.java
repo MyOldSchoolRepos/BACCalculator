@@ -135,7 +135,7 @@ public class MainBAC extends Activity
         super.onStart();
         // TODO: setDryRun(true) for development, setDryRun(false) for production.
         EasyTracker.getInstance(this).activityStart(this);  // Add this method.
-        GoogleAnalytics.getInstance(this).setDryRun(true);
+        GoogleAnalytics.getInstance(this).setDryRun(false);
     }
 
     @Override
@@ -400,7 +400,7 @@ public class MainBAC extends Activity
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_stat_name)
                             .setLargeIcon(bm)
-                            .setContentTitle("My Blood Alcohol: " + BACFormat.format(BAC))
+                            .setContentTitle("Blood Alcohol: " + BACFormat.format(BAC))
                             .setContentText("First drink: " + hour + ":" + minuteFormat.format(minute) + " " + AM_PM + ". Tap to Update!")
                             .setOngoing(ongoingNotifications)//Base clearing on user settings
                             .setOnlyAlertOnce(true)
@@ -422,8 +422,24 @@ public class MainBAC extends Activity
             // After 5 minutes
             notificationTimer.schedule(newNotify, 5*60*1000);
         }
-        else if (showNotifications){
-            //TODO: Add a clearable notification letting the user know their BAC has hit 0.
+        else if (showNotifications && userInfo.getDrinks() != 0){
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+            NotificationCompat.Builder builder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_stat_name)
+                            .setLargeIcon(bm)
+                            .setContentTitle("Blood Alcohol: 0.000")
+                            .setContentText("Drink plenty of water!")
+                            .setOnlyAlertOnce(true);//DO NOT HOG STATUS BAR
+
+            Intent notificationIntent = new Intent(this, MainBAC.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(contentIntent);
+
+            // Add as notification
+            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(NOTIFICATION_ID, builder.build());
         }
         else{
             removeNotification();
@@ -443,7 +459,6 @@ public class MainBAC extends Activity
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(NOTIFICATION_STATE,showNotifications).apply();
         addNotification();
-        //TODO: Might have to repaint, but I don't think so?
     }
 
     @Override
