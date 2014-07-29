@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="brillianceanimationstudio.brandonward.baccalculator.SettingsFragment"
+    android:background="#ff222222">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Notifications:"
+        android:id="@+id/notificationTitle"
+        android:textColor="#ff33B5E5"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="28dp" />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="3dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Show in notification tray:"
+        android:id="@+id/launcherTrayTitle"
+        android:textColor="#ff33B5E5"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="40dp"
+        android:textSize="20dp" />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:id="@+id/notifySetting"
+        android:gravity="right">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enabled"
+            android:id="@+id/notifyEnable"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:checked="true"
+            android:paddingRight="10dp"
+            android:textSize="20dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Disabled"
+            android:id="@+id/notifyDisable"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:checked="false"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="20dp" />
+    </RadioGroup>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Make notification ongoing:"
+        android:id="@+id/ongoingTitle"
+        android:textColor="#ff33B5E5"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="40dp"
+        android:textSize="20dp" />
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:id="@+id/ongoingSetting"
+        android:gravity="right">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enabled"
+            android:id="@+id/ongoingEnable"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:checked="true"
+            android:paddingRight="10dp"
+            android:textSize="20dp" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Disabled"
+            android:id="@+id/ongoingDisable"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:checked="false"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="20dp" />
+    </RadioGroup>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="15dp" />
+
+</LinearLayout>

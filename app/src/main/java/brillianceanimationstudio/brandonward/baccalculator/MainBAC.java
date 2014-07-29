@@ -31,17 +31,21 @@ import com.google.android.gms.ads.*;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainBAC extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
     private static final String AD_UNIT_ID = "ca-app-pub-1321769086734378/4674749647";
     private static final int NOTIFICATION_ID = 711711;
     private static final String NOTIFICATION_STATE = "showNotifications";
-    private boolean showNotifications = true;
+    private static final String NOTIFICATION_ONGOING = "ongoingNotifications";
+    private boolean showNotifications;
+    private boolean ongoingNotifications;
     private String USER_STATE;
     private String VISIBLE_FRAGMENT_TAG;
     // Count until next Full Screen Ad is shown //
@@ -67,7 +71,8 @@ public class MainBAC extends Activity
         new SimpleEula(this).show();
         USER_STATE = getUserInfo().getPrefsKey();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-        //showNotifications = prefs.getBoolean(NOTIFICATION_STATE, true); TODO: not working
+        showNotifications = prefs.getBoolean(NOTIFICATION_STATE, true);
+        ongoingNotifications = prefs.getBoolean(NOTIFICATION_ONGOING, true);
         String user_state = prefs.getString(USER_STATE, "");
         userInfo = getUserInfo().readPrefsString(user_state);
         Calendar runtime = Calendar.getInstance();
@@ -159,7 +164,9 @@ public class MainBAC extends Activity
             case 2:
                 newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
                 break;
-
+            case 3:
+                newFragment = new SettingsFragment().newInstance(showNotifications,ongoingNotifications);
+                break;
         }
         onSectionAttached(position+1);
         VISIBLE_FRAGMENT_TAG = newFragment.toString();
@@ -209,6 +216,9 @@ public class MainBAC extends Activity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+                mTitle = getString(R.string.title_sectionSettings);
+                break;
         }
     }
 
@@ -234,37 +244,10 @@ public class MainBAC extends Activity
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
-        super.onPrepareOptionsMenu(menu);
-/*            if (showNotifications){ // TODO: This is not working.
-                menu.getItem(R.id.action_allow_notifications).setChecked(true);
-            }
-            else{
-                menu.getItem(R.id.action_allow_notifications).setChecked(false);
-            }*/
-        return true;
-    }
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_allow_notifications) {
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
-            SharedPreferences.Editor editor = prefs.edit();
-            MenuItem notify = item;
-            if (notify.isChecked()){
-            //    editor.putBoolean(NOTIFICATION_STATE,true).apply(); // TODO: Not Working
-            //    showNotifications = true;
-            }
-            else{
-             //   editor.putBoolean(NOTIFICATION_STATE, false).apply();
-            //    showNotifications = false;
-            }
-            addNotification();
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -418,7 +401,10 @@ public class MainBAC extends Activity
                             .setSmallIcon(R.drawable.ic_stat_name)
                             .setLargeIcon(bm)
                             .setContentTitle("My Blood Alcohol: " + BACFormat.format(BAC))
-                            .setContentText("First drink: " + hour + ":" + minuteFormat.format(minute) + " " + AM_PM + ". Tap to Update!");
+                            .setContentText("First drink: " + hour + ":" + minuteFormat.format(minute) + " " + AM_PM + ". Tap to Update!")
+                            .setOngoing(ongoingNotifications)//Base clearing on user settings
+                            .setOnlyAlertOnce(true)
+                            ;//DO NOT HOG STATUS BAR
 
             Intent notificationIntent = new Intent(this, MainBAC.class);
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
@@ -428,6 +414,16 @@ public class MainBAC extends Activity
             // Add as notification
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             manager.notify(NOTIFICATION_ID, builder.build());
+
+            // Schedule for 5 minutes out
+            TimedNotifications newNotify = new TimedNotifications();
+            Timer notificationTimer = new Timer();
+
+            // After 5 minutes
+            notificationTimer.schedule(newNotify, 5*60*1000);
+        }
+        else if (showNotifications){
+            //TODO: Add a clearable notification letting the user know their BAC has hit 0.
         }
         else{
             removeNotification();
@@ -438,5 +434,33 @@ public class MainBAC extends Activity
     private void removeNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(NOTIFICATION_ID);
+    }
+
+    @Override
+    public void toShowNotifications(boolean showNotifications) {
+        this.showNotifications = showNotifications;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(NOTIFICATION_STATE,showNotifications).apply();
+        addNotification();
+        //TODO: Might have to repaint, but I don't think so?
+    }
+
+    @Override
+    public void toShowOngoing(boolean showOngoing) {
+        this.ongoingNotifications = showOngoing;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(NOTIFICATION_ONGOING,ongoingNotifications).apply();
+        addNotification();
+    }
+
+    class TimedNotifications extends TimerTask{
+        public void run() {
+            generateNotification();
+        }
+        public void generateNotification(){
+            addNotification();
+        }
     }
 }
