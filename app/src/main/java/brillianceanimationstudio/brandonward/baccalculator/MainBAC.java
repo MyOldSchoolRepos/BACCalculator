@@ -40,7 +40,7 @@ public class MainBAC extends Activity
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
-    private static final String AD_UNIT_ID = "ca-app-pub-1321769086734378/4674749647";
+    private static final String AD_UNIT_ID = "ca-app-pub-6216655107273980/1892012754";
     private static final int NOTIFICATION_ID = 711711;
     private static final String NOTIFICATION_STATE = "showNotifications";
     private static final String NOTIFICATION_ONGOING = "ongoingNotifications";
