@@ -36,7 +36,7 @@ import java.util.TimerTask;
 
 
 public class MainBAC extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, WelcomeScreenFragment.OnFragmentInteractionListener, StatsFragment.OnFragmentInteractionListener, BldAlcCntntCalculation.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, StandardDrinkCalculatorFragment.OnFragmentInteractionListener {
 
     private InterstitialAd interstitial;
     /* Your ad unit id. Replace with your actual ad unit id. */
@@ -165,6 +165,9 @@ public class MainBAC extends Activity
                 newFragment = new BldAlcCntntCalculation().newInstance(userInfo);
                 break;
             case 3:
+                newFragment = new StandardDrinkCalculatorFragment().newInstance(userInfo);
+                break;
+            case 4:
                 newFragment = new SettingsFragment().newInstance(showNotifications,ongoingNotifications);
                 break;
         }
@@ -217,6 +220,9 @@ public class MainBAC extends Activity
                 mTitle = getString(R.string.title_section3);
                 break;
             case 4:
+                mTitle = getString(R.string.title_section4);
+                break;
+            case 5:
                 mTitle = getString(R.string.title_sectionSettings);
                 break;
         }
@@ -468,6 +474,11 @@ public class MainBAC extends Activity
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(NOTIFICATION_ONGOING,ongoingNotifications).apply();
         addNotification();
+    }
+
+    @Override
+    public void onCalculateStandardDrink(userInfo userInfo) {
+        //TODO: Make the code do something here
     }
 
     class TimedNotifications extends TimerTask{

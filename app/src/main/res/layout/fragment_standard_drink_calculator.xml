@@ -47,7 +47,9 @@
             android:background="#ffffffff"
             android:textSize="25dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="#ff0011ff" />
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -99,7 +101,9 @@
             android:background="#ffffffff"
             android:textSize="25dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="#ff0011ff" />
 
         <RadioGroup
             android:layout_width="wrap_content"

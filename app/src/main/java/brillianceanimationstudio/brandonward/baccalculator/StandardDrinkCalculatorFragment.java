@@ -1,13 +1,17 @@
 package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import brillianceanimationstudio.brandonward.baccalculator.domain.userInfo;
 
 
 /**
@@ -20,14 +24,10 @@ import android.view.ViewGroup;
  *
  */
 public class StandardDrinkCalculatorFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String ARG_USER_INFO = "SDUserInfo";
+
+    private userInfo sdUserInfo;
 
     private OnFragmentInteractionListener mListener;
 
@@ -35,16 +35,13 @@ public class StandardDrinkCalculatorFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param userInfo the instance of the user passed to this calculator
      * @return A new instance of fragment StandardDrinkCalculatorFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static StandardDrinkCalculatorFragment newInstance(String param1, String param2) {
+    public static StandardDrinkCalculatorFragment newInstance(userInfo userInfo) {
         StandardDrinkCalculatorFragment fragment = new StandardDrinkCalculatorFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_USER_INFO, userInfo);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +53,7 @@ public class StandardDrinkCalculatorFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            sdUserInfo =(userInfo) getArguments().getSerializable(ARG_USER_INFO);
         }
     }
 
@@ -65,13 +61,21 @@ public class StandardDrinkCalculatorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_standard_drink_calculator, container, false);
+        View view = inflater.inflate(R.layout.fragment_standard_drink_calculator, container, false);
+        Button instructions = (Button) view.findViewById(R.id.infoBtn);
+        instructions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                showHelp(); TODO: Re-hook UI once DialogueFragment is working.
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(userInfo userInfo) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onCalculateStandardDrink(userInfo);
         }
     }
 
@@ -92,6 +96,19 @@ public class StandardDrinkCalculatorFragment extends Fragment {
         mListener = null;
     }
 
+    /*public void showHelp(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+        builder.setMessage("Look at this dialog!")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //TODO: Crashes app...  I should change this to a dialogue fragment, it is bookmarked.
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }*/
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -104,7 +121,7 @@ public class StandardDrinkCalculatorFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onCalculateStandardDrink(userInfo userInfo);
     }
 
 }
