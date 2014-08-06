@@ -23,7 +23,7 @@
             android:layout_below="@+id/space"
             android:layout_marginLeft="15dp"
             android:textSize="30dp"
-            android:textColor="#ffffffff" />
+            android:textColor="#ff33B5E5" />
 
         <Space
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                 android:id="@+id/poundsButton"
                 android:checked="false"
                 android:textSize="25dp"
-                android:textColor="#ffffffff" />
+                android:textColor="#ff33B5E5" />
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                 android:id="@+id/kilogramsButton"
                 android:checked="false"
                 android:textSize="25dp"
-                android:textColor="#ffffffff"
+                android:textColor="#ff33B5E5"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="15dp" />
         </RadioGroup>
@@ -90,7 +90,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textSize="30dp"
-            android:textColor="#ffffffff"
+            android:textColor="#ff33B5E5"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp" />
 
@@ -112,7 +112,7 @@
                 android:id="@+id/maleButton"
                 android:checked="false"
                 android:textSize="25dp"
-                android:textColor="#ffffffff" />
+                android:textColor="#ff33B5E5" />
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
                 android:text="Female"
                 android:id="@+id/femaleButton"
                 android:checked="false"
-                android:textColor="#ffffffff"
+                android:textColor="#ff33B5E5"
                 android:textSize="25dp"
                 android:layout_marginLeft="15dp" />
         </RadioGroup>

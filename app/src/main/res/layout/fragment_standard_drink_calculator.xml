@@ -1,0 +1,191 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="brillianceanimationstudio.brandonward.baccalculator.StandardDrinkCalculatorFragment"
+    android:background="#ff222222">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="left|top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="How Many Standard Drinks?"
+            android:id="@+id/SDTitle"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:textSize="25dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Volume:"
+            android:id="@+id/volumeTitle"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/volumeNumber"
+            android:layout_gravity="center_horizontal"
+            android:background="#ffffffff"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:id="@+id/unitsOfVolumeRdoGrp"
+            android:orientation="horizontal"
+            android:layout_marginRight="25dp">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ounces"
+                android:id="@+id/radioOunces"
+                android:checked="false"
+                android:textColor="#ff33B5E5"
+                android:textSize="25dp"
+                android:layout_marginRight="10dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="milliliters"
+                android:id="@+id/radioMilliliters"
+                android:checked="false"
+                android:textColor="#ff33B5E5"
+                android:textSize="25dp" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Concentration:"
+            android:id="@+id/concentrationTitle"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editText"
+            android:layout_gravity="center_horizontal"
+            android:background="#ffffffff"
+            android:textSize="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:id="@+id/concentrationRdoGrp"
+            android:orientation="horizontal"
+            android:layout_marginRight="25dp" >
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="% ABV"
+                android:id="@+id/radioABV"
+                android:checked="false"
+                android:textColor="#ff33B5E5"
+                android:textSize="25dp"
+                android:layout_marginRight="10dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Proof"
+                android:id="@+id/radioProof"
+                android:checked="false"
+                android:textColor="#ff33B5E5"
+                android:textSize="25dp" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="# of Standard Drinks:"
+            android:id="@+id/SDCalcTitle"
+            android:textColor="#ff33B5E5"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/standardDrinkCalc"
+            android:background="#ffffffff"
+            android:textSize="50dp"
+            android:textColor="#ffde0c1b"
+            android:textStyle="bold"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/buttonLinLayout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add To Drink Count"
+                android:id="@+id/addToDrinkCountBtn"
+                android:background="#ff1fdf19"
+                android:textStyle="bold"
+                android:typeface="normal"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Instructions"
+                android:id="@+id/infoBtn"
+                android:background="#ff33B5E5"
+                android:textStyle="bold"
+                android:typeface="normal"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

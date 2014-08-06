@@ -19,7 +19,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Time of First Drink:"
             android:id="@+id/timeTitle"
-            android:textColor="#ffffffff"
+            android:textColor="#ff33B5E5"
             android:textSize="27dp"
             android:textIsSelectable="false"
             android:layout_marginLeft="15dp"
@@ -55,7 +55,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Number of Drinks:"
             android:id="@+id/drinkTitle"
-            android:textColor="#ffffffff"
+            android:textColor="#ff33B5E5"
             android:textSize="27dp"
             android:textIsSelectable="false"
             android:layout_marginTop="20dp"/>
@@ -108,7 +108,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="My Blood Alcohol Content:"
             android:id="@+id/bloodAlcCntTitle"
-            android:textColor="#ffffffff"
+            android:textColor="#ff33B5E5"
             android:layout_marginTop="15dp"
             android:textSize="27dp" />
 
