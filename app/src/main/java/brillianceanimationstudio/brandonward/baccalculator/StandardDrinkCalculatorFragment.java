@@ -2,6 +2,7 @@ package brillianceanimationstudio.brandonward.baccalculator;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,7 +67,7 @@ public class StandardDrinkCalculatorFragment extends Fragment {
         instructions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showHelp(); TODO: Re-hook UI once DialogueFragment is working.
+               showHelp(); //TODO: Re-hook UI once DialogueFragment is working.
             }
         });
         return view;
@@ -78,6 +79,7 @@ public class StandardDrinkCalculatorFragment extends Fragment {
             mListener.onCalculateStandardDrink(userInfo);
         }
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -96,8 +98,15 @@ public class StandardDrinkCalculatorFragment extends Fragment {
         mListener = null;
     }
 
-    /*public void showHelp(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+    public void showHelp(){
+        DialogFragment dialog = new InstructionFragmentDialogue();
+        Bundle args = new Bundle();
+        args.putString("title", "Title");
+        args.putString("message", "Message");
+        dialog.setArguments(args);
+        //dialog.setTargetFragment(this, TODO: Find a fragment slot to put this into?);
+        dialog.show(getFragmentManager(), "tag");
+/*        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
         builder.setMessage("Look at this dialog!")
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -106,8 +115,8 @@ public class StandardDrinkCalculatorFragment extends Fragment {
                     }
                 });
         AlertDialog alert = builder.create();
-        alert.show();
-    }*/
+        alert.show();*/
+    }
 
     /**
      * This interface must be implemented by activities that contain this
